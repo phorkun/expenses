@@ -1,0 +1,1481 @@
+<!doctype html>
+<html lang="km" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<link rel="icon" href="data:," />
+<title>Expensio — គ្រប់គ្រងចំណូល ចំណាយ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;500;600;700&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --font:"Kantumruy Pro","Leelawadee UI",system-ui,sans-serif;
+  --font-num:"Sora","Kantumruy Pro",system-ui,sans-serif;
+  --shell:#17161d; --shell-edge:rgba(255,255,255,.07);
+  --panel:#100f14; --panel-edge:rgba(255,255,255,.05);
+  --card:#1e1d27; --card-2:#26242f; --card-hover:#2a2836;
+  --ink:#f4f3fa; --ink-2:#b6b3c6; --ink-3:#837f96;
+  --line:rgba(255,255,255,.07);
+  --teal:#2fd3ae; --teal-deep:#0d9d7e; --teal-soft:rgba(47,211,174,.14);
+  --blue:#2e8bff; --violet:#8b5cf6; --violet-2:#a78bfa;
+  --pink:#f0567a; --rose:#fb5e7e; --amber:#f5a524; --mint:#3ecf8e;
+  --danger:#fb5e7e; --danger-soft:rgba(251,94,126,.13);
+  --income:#2fd3ae; --expense:#fb7185;
+  --input:#17161f; --input-edge:rgba(255,255,255,.1);
+  --shadow:0 30px 80px rgba(38,20,90,.45);
+  --side-active:#26252f;
+  --login-card:#191822;
+  --print-ink:#14131c;
+}
+html[data-theme="light"]{
+  --shell:#faf9fd; --shell-edge:rgba(30,20,70,.08);
+  --panel:#f1eef9; --panel-edge:rgba(30,20,70,.06);
+  --card:#ffffff; --card-2:#f4f1fb; --card-hover:#efeafd;
+  --ink:#1d1a2b; --ink-2:#55506e; --ink-3:#8b86a3;
+  --line:rgba(30,20,70,.09);
+  --teal-soft:rgba(13,157,126,.12);
+  --danger-soft:rgba(240,60,100,.1);
+  --input:#ffffff; --input-edge:rgba(30,20,70,.14);
+  --shadow:0 30px 80px rgba(60,35,130,.28);
+  --side-active:#ece8f8;
+  --login-card:#ffffff;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:var(--font); color:var(--ink); min-height:100vh;
+  background:var(--shell);
+  -webkit-font-smoothing:antialiased;
+}
+button{font-family:inherit;cursor:pointer}
+input,select,textarea{font-family:inherit}
+.num{font-family:var(--font-num);font-variant-numeric:tabular-nums}
+svg.ic{width:20px;height:20px;flex:none}
+.hidden{display:none !important}
+
+/* ---------- stage / shell ---------- */
+.stage{position:relative}
+.shell{
+  position:relative;background:var(--shell);
+  display:grid;grid-template-columns:236px minmax(0,1fr);min-height:100dvh;
+}
+
+/* ---------- sidebar ---------- */
+.side{padding:30px 18px 22px;display:flex;flex-direction:column;gap:6px;min-width:0;position:sticky;top:0;height:100dvh;align-self:start;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--input-edge) transparent}
+.side::-webkit-scrollbar{width:6px}
+.side::-webkit-scrollbar-thumb{background:var(--input-edge);border-radius:99px}
+.nav{display:flex;flex-direction:column;gap:4px;margin-top:4px;min-width:0}
+.profile{display:flex;flex-direction:column;align-items:center;text-align:center;padding:4px 0 20px}
+.avatar{
+  width:78px;height:78px;border-radius:50%;display:grid;place-items:center;color:#fff;
+  font-family:var(--font-num);font-weight:700;font-size:26px;letter-spacing:.5px;
+  background:conic-gradient(from 210deg,#f5a524,#f0567a,#8b5cf6,#2e8bff,#2fd3ae,#f5a524);
+  padding:3px;box-shadow:0 10px 26px rgba(0,0,0,.35);
+}
+.avatar>span{width:100%;height:100%;border-radius:50%;display:grid;place-items:center;background:#3a2b20;background:linear-gradient(160deg,#6b4a2f,#3c2a1c)}
+.avatar>span.alt{background:linear-gradient(160deg,#274b73,#16283e)}
+.profile h2{margin:12px 0 2px;font-size:16.5px;font-weight:600}
+.profile .role{font-size:12.5px;color:var(--ink-3)}
+.nav{display:flex;flex-direction:column;gap:4px;margin-top:4px}
+.nav button{
+  display:flex;align-items:center;gap:13px;width:100%;padding:12px 14px;border:0;border-radius:12px;
+  background:transparent;color:var(--ink-2);font-size:15px;font-weight:500;text-align:left;transition:.15s;
+}
+.nav button svg{width:21px;height:21px}
+.nav button:hover{background:var(--card-hover);color:var(--ink)}
+.nav button.active{background:var(--side-active);color:var(--teal);font-weight:600;box-shadow:inset 0 0 0 1px var(--line)}
+.side-foot{margin-top:auto;padding-top:18px}
+.logo{display:flex;align-items:center;gap:9px;padding:0 6px}
+.logo .mark{color:var(--teal);display:grid;place-items:center}
+.logo b{font-family:var(--font-num);font-weight:800;font-size:21px;letter-spacing:.4px;color:var(--ink)}
+.logo b em{font-style:normal;color:var(--teal)}
+.side-actions{display:flex;gap:8px;margin-top:16px;min-width:0}
+.chip-btn{min-width:0}
+.chip-btn{
+  flex:1;display:flex;align-items:center;justify-content:center;gap:7px;padding:9px 6px;border-radius:10px;
+  border:1px solid var(--line);background:var(--card);color:var(--ink-2);font-size:13px;font-weight:500;transition:.15s;
+}
+.chip-btn:hover{color:var(--ink);border-color:var(--input-edge)}
+.chip-btn svg{width:17px;height:17px}
+
+/* ---------- main panel ---------- */
+.main{background:var(--panel);border-left:1px solid var(--panel-edge);padding:26px 28px 30px;min-width:0}
+.topbar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:20px}
+.topbar h1{font-size:23px;font-weight:700;margin:0}
+.topbar .sub{color:var(--ink-3);font-size:13.5px;margin-top:2px}
+.topbar .spacer{flex:1}
+.searchbox{position:relative}
+.searchbox svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:17px;height:17px;color:var(--ink-3)}
+.searchbox input{
+  background:var(--input);border:1px solid var(--input-edge);color:var(--ink);border-radius:11px;
+  padding:10px 12px 10px 36px;font-size:14px;width:230px;outline:none;
+}
+.searchbox input:focus{border-color:var(--teal)}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;border:0;border-radius:11px;padding:10px 16px;
+  font-size:14px;font-weight:600;transition:.15s;color:var(--ink);background:var(--card-2);
+}
+.btn svg{width:17px;height:17px}
+.btn:hover{filter:brightness(1.12)}
+.btn.primary{background:var(--teal);color:#06382c}
+.btn.primary:hover{background:#43e2c0}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--ink-2)}
+.btn.ghost:hover{color:var(--ink);border-color:var(--input-edge)}
+.btn.danger{background:var(--danger-soft);color:var(--danger)}
+.btn.sm{padding:7px 11px;font-size:13px;border-radius:9px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+
+/* ---------- cards & grids ---------- */
+.grid-dash{display:grid;grid-template-columns:400px 1fr;gap:18px}
+.grid-dash>*,.stats>*,.charts>*,.two-col>*,.cat-grid>*,.quick>*,.card{min-width:0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px 22px}
+.card h3{margin:0 0 14px;font-size:15.5px;font-weight:600}
+.card h3 .r{float:right;font-size:12.5px;color:var(--ink-3);font-weight:500}
+.kpi-list{display:flex;flex-direction:column}
+.kpi-row{display:flex;align-items:center;gap:13px;padding:10px 2px;border-bottom:1px solid var(--line)}
+.kpi-row:last-child{border-bottom:0}
+.kpi-row .ic-wrap{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:none}
+.kpi-row .ic-wrap svg{width:18px;height:18px}
+.kpi-row .lbl{flex:1;font-size:14.5px;color:var(--ink-2)}
+.kpi-row .val{font-family:var(--font-num);font-weight:700;font-size:15.5px}
+.tone-violet{background:rgba(139,92,246,.16);color:#b79cff}
+.tone-blue{background:rgba(46,139,255,.16);color:#7db4ff}
+.tone-pink{background:rgba(240,86,122,.16);color:#ff8fab}
+.tone-amber{background:rgba(245,165,36,.16);color:#ffc65c}
+.tone-teal{background:var(--teal-soft);color:var(--teal)}
+.tone-mint{background:rgba(62,207,142,.15);color:#5edda6}
+
+/* quick access */
+.quick{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:18px}
+.quick button{
+  display:flex;align-items:center;justify-content:center;gap:11px;padding:17px 10px;border-radius:14px;
+  border:1px solid var(--line);background:var(--card-2);color:var(--ink);font-size:14.5px;font-weight:600;transition:.15s;
+}
+.quick button:hover{border-color:var(--input-edge);transform:translateY(-1px)}
+.quick .dot{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;flex:none}
+.quick .dot svg{width:18px;height:18px}
+.dot-pink{background:radial-gradient(circle at 35% 30%,#ff8fab,#d61c4e);color:#fff}
+.dot-blue{background:radial-gradient(circle at 35% 30%,#7db4ff,#1c5fd6);color:#fff}
+.dot-teal{background:radial-gradient(circle at 35% 30%,#5fe8c6,#0d9d7e);color:#fff}
+.dot-grey{background:radial-gradient(circle at 35% 30%,#c9c4dd,#6f6a85);color:#fff}
+
+/* charts */
+.charts{display:grid;grid-template-columns:1.15fr 1fr;gap:26px}
+.chart-title{font-size:13.5px;color:var(--ink-2);margin:0 0 8px;font-weight:500}
+.legend{display:flex;gap:16px;font-size:12.5px;color:var(--ink-3);margin-top:6px}
+.legend i{width:9px;height:9px;border-radius:3px;display:inline-block;margin-right:6px}
+.bars{display:flex;align-items:flex-end;gap:10px;height:170px;padding-top:8px}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:7px;height:100%;justify-content:flex-end;min-width:0}
+.bar-pair{display:flex;align-items:flex-end;gap:4px;height:100%}
+.bar{width:15px;border-radius:5px 5px 3px 3px;min-height:3px;transition:height .4s}
+.bar.single{width:24px}
+.bar-col .cap{font-size:11.5px;color:var(--ink-3);font-family:var(--font-num);white-space:nowrap}
+.bar-col .capv{font-size:10.5px;color:var(--ink-2);font-family:var(--font-num)}
+.bar-val{font-size:10.5px;font-weight:700;font-family:var(--font-num);white-space:nowrap;line-height:1.3;font-variant-numeric:tabular-nums}
+.pair-vals{display:flex;flex-direction:column;align-items:center;margin-bottom:5px}
+.init-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.init-cell{background:var(--card-2);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.init-cell .il{font-size:12.5px;color:var(--ink-3)}
+.init-cell .iv{font-family:var(--font-num);font-weight:800;font-size:19px;margin-top:4px;font-variant-numeric:tabular-nums}
+
+/* tables */
+.tbl-wrap{overflow-x:auto;margin:0 -6px;padding:0 6px}
+/* income/expense tab: show ~5 rows, scroll the rest */
+.tbl-scroll5{max-height:302px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--input-edge) transparent}
+.tbl-scroll5::-webkit-scrollbar{width:8px;height:8px}
+.tbl-scroll5::-webkit-scrollbar-thumb{background:var(--input-edge);border-radius:99px}
+.tbl-scroll5 thead th{position:sticky;top:0;background:var(--card);z-index:2}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:520px}
+th{ text-align:left;color:var(--ink-3);font-weight:500;font-size:12.5px;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:11px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:0}
+td.amt,th.amt{text-align:right;font-family:var(--font-num);font-weight:700;white-space:nowrap}
+td.amt.in{color:var(--income)} td.amt.out{color:var(--expense)}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:4px 11px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap;color:#fff}
+.pill i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.85)}
+.pill.in{background:rgba(13,157,126,.85)} .pill.out{background:rgba(214,28,78,.8)}
+.row-actions{display:flex;gap:6px;justify-content:flex-end}
+.icon-btn{width:32px;height:32px;border-radius:9px;border:1px solid var(--line);background:transparent;color:var(--ink-2);display:grid;place-items:center;transition:.15s}
+.icon-btn:hover{color:var(--ink);border-color:var(--input-edge)}
+.icon-btn svg{width:16px;height:16px}
+.icon-btn.del:hover{color:var(--danger);border-color:var(--danger)}
+.empty{padding:34px 10px;text-align:center;color:var(--ink-3);font-size:14px}
+
+/* stat cards */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:18px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px 20px}
+.stat .lbl{font-size:13px;color:var(--ink-3);display:flex;align-items:center;gap:8px}
+.stat .lbl svg{width:16px;height:16px}
+.stat .big{font-family:var(--font-num);font-size:26px;font-weight:800;margin-top:7px}
+.stat .note{font-size:12.5px;color:var(--ink-3);margin-top:3px}
+
+/* filters */
+.filters{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+.filters select,.filters input[type="date"],.filters input[type="month"],.filters input[type="text"]{
+  background:var(--input);border:1px solid var(--input-edge);color:var(--ink);border-radius:10px;padding:9px 11px;font-size:13.5px;outline:none;
+}
+.filters select:focus,.filters input:focus{border-color:var(--teal)}
+.seg{display:inline-flex;background:var(--card-2);border:1px solid var(--line);border-radius:11px;padding:3px;gap:3px}
+.seg button{border:0;background:transparent;color:var(--ink-2);padding:7px 15px;border-radius:8px;font-size:13.5px;font-weight:600}
+.seg button.active{background:var(--teal);color:#06382c}
+.seg button.active.out{background:var(--rose);color:#4d0a1c}
+
+/* sections management */
+.two-col{display:grid;grid-template-columns:1fr 1.4fr;gap:18px;align-items:start}
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:14px}
+.cat-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
+.cat-card .top{display:flex;align-items:center;gap:11px}
+.cat-dot{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:#fff;flex:none}
+.cat-dot svg{width:19px;height:19px}
+.cat-card h4{margin:0;font-size:15px;font-weight:600}
+.cat-card .meta{font-size:12.5px;color:var(--ink-3);margin-top:2px}
+.cat-card .foot{display:flex;align-items:center;justify-content:space-between;margin-top:13px}
+.cat-card .sum{font-family:var(--font-num);font-weight:700;font-size:15px}
+.list-row{display:flex;align-items:center;gap:12px;padding:12px 4px;border-bottom:1px solid var(--line)}
+.list-row:last-child{border-bottom:0}
+.list-row .grow{flex:1;min-width:0}
+.list-row .grow b{font-weight:600;font-size:14.5px}
+.list-row .grow div{font-size:12.5px;color:var(--ink-3)}
+
+/* modal */
+.modal-back{position:fixed;inset:0;background:rgba(12,8,30,.62);backdrop-filter:blur(4px);z-index:80;display:grid;place-items:center;padding:16px}
+.modal{background:var(--shell);border:1px solid var(--shell-edge);border-radius:22px;width:100%;max-width:520px;max-height:92vh;overflow-y:auto;padding:26px 28px;box-shadow:var(--shadow)}
+.modal.wide{max-width:640px}
+.modal h3{margin:0 0 4px;font-size:19px;font-weight:700}
+.modal .desc{color:var(--ink-3);font-size:13.5px;margin-bottom:16px}
+.f-row{margin-bottom:14px}
+.f-row label{display:block;font-size:13.5px;font-weight:600;margin-bottom:6px;color:var(--ink-2)}
+.f-row input,.f-row select,.f-row textarea{
+  width:100%;background:var(--input);border:1px solid var(--input-edge);color:var(--ink);border-radius:11px;
+  padding:11px 13px;font-size:14.5px;outline:none;
+}
+.f-row input:focus,.f-row select:focus,.f-row textarea:focus{border-color:var(--teal)}
+.f-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.calc-hint{display:flex;align-items:center;gap:8px;margin-top:7px;font-size:13px;color:var(--ink-3)}
+.calc-hint svg{width:16px;height:16px;flex:none}
+.calc-hint .res{font-family:var(--font-num);font-weight:700;color:var(--teal);font-size:14.5px}
+.calc-hint.err .res{color:var(--danger)}
+.amount-wrap{position:relative}
+.amount-wrap .cur{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--ink-3);font-family:var(--font-num);font-weight:700}
+.amount-wrap input{padding-left:30px;font-family:var(--font-num);font-weight:600}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
+.swatch-row{display:flex;gap:8px;flex-wrap:wrap}
+.swatch{width:34px;height:34px;border-radius:10px;border:2px solid transparent;cursor:pointer}
+.swatch.sel{border-color:#fff;box-shadow:0 0 0 2px var(--teal)}
+
+/* toast */
+.toast{
+  position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);z-index:120;opacity:0;pointer-events:none;
+  background:#14121c;color:#f4f3fa;border:1px solid rgba(255,255,255,.14);padding:12px 20px;border-radius:13px;
+  font-size:14px;font-weight:500;box-shadow:0 18px 40px rgba(0,0,0,.4);transition:.25s;max-width:92vw;text-align:center;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.err{background:#3d1020}
+
+/* ---------- login ---------- */
+.login-stage{min-height:100dvh;display:grid}
+.login-shell{position:relative;width:100%;background:var(--shell);display:grid;grid-template-columns:1fr 1.05fr}
+.login-brand{padding:44px 40px;display:flex;flex-direction:column;background:var(--panel)}
+.login-brand .logo b{font-size:26px}
+.login-brand h1{font-size:30px;line-height:1.3;margin:26px 0 10px;font-weight:700}
+.login-brand p{color:var(--ink-3);font-size:14.5px;line-height:1.7;margin:0}
+.login-feats{margin-top:auto;display:flex;flex-direction:column;gap:12px;padding-top:28px}
+.login-feats div{display:flex;gap:11px;align-items:center;font-size:14px;color:var(--ink-2)}
+.login-feats .ic-wrap{width:32px;height:32px;border-radius:9px}
+.login-form{padding:44px 42px;background:var(--login-card);display:flex;flex-direction:column;justify-content:center}
+.login-brand{justify-content:center}
+.login-form h2{margin:0 0 4px;font-size:21px}
+.login-form .desc{color:var(--ink-3);font-size:13.5px;margin-bottom:18px}
+.ic-wrap{display:inline-grid;place-items:center;flex:none;border-radius:10px}
+.ic-wrap svg{width:18px;height:18px}
+.role-cards{display:flex;flex-direction:column;gap:12px}
+.role-card{display:flex;align-items:center;gap:14px;width:100%;text-align:left;border:1px solid var(--line);background:var(--card);border-radius:16px;padding:16px 18px;color:var(--ink-2);transition:.15s}
+.role-card:hover{border-color:var(--teal);background:var(--teal-soft);transform:translateY(-1px)}
+.role-card b{display:block;font-size:16.5px;color:var(--ink);margin-bottom:3px}
+.role-card .rc-desc{font-size:13px;line-height:1.55;display:block}
+.back-link{background:none;border:0;color:var(--teal);font-size:13.5px;font-weight:600;padding:0;margin-bottom:16px;cursor:pointer}
+.back-link:hover{text-decoration:underline}
+.demo-box{margin-top:18px;background:var(--card-2);border:1px dashed var(--input-edge);border-radius:12px;padding:12px 15px;font-size:13px;color:var(--ink-2);line-height:1.9}
+.demo-box b{color:var(--ink)}
+.demo-box code{font-family:var(--font-num);background:var(--input);padding:1px 7px;border-radius:6px;font-size:12.5px}
+.form-err{background:var(--danger-soft);color:var(--danger);border-radius:10px;padding:10px 13px;font-size:13.5px;margin-bottom:14px}
+
+/* print sheet */
+.sheet-scroll{overflow-x:auto;border-radius:14px}
+.print-sheet{background:#fff;color:var(--print-ink);border-radius:14px;padding:38px 42px;font-size:13.5px;min-width:600px}
+.print-sheet h2{margin:0;font-size:21px}
+.print-sheet .ps-head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #0d9d7e;padding-bottom:14px;margin-bottom:16px}
+.print-sheet table{min-width:0;font-size:13px}
+.print-sheet th{color:#55516e;border-bottom:2px solid #d9d5ea}
+.print-sheet td{border-bottom:1px solid #e9e6f4;color:#262338}
+.print-sheet td.amt.in{color:#0d7a62}.print-sheet td.amt.out{color:#c22447}
+.print-sheet .ps-totals{display:flex;gap:26px;justify-content:flex-end;margin-top:16px;font-family:var(--font-num);font-weight:700}
+.print-sheet .ps-foot{margin-top:26px;color:#8b86a3;font-size:12px;display:flex;justify-content:space-between}
+
+.view{display:none}
+.view.active{display:block;animation:fadein .22s ease}
+@keyframes fadein{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){.view.active{animation:none}.bar{transition:none}}
+
+@media print{
+  body{background:#fff !important}
+  .stage,.login-stage,.toast,.no-print{display:none !important}
+  .modal-back{position:static;background:none;backdrop-filter:none;padding:0;display:block}
+  .modal{box-shadow:none;border:0;max-width:none;max-height:none;overflow:visible;padding:0;background:#fff}
+  .sheet-scroll{overflow:visible}
+  .print-sheet{padding:6px;min-width:0}
+}
+@media (max-width:1080px){
+  .grid-dash{grid-template-columns:1fr}
+  .charts{grid-template-columns:1fr}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .quick{grid-template-columns:repeat(2,1fr)}
+  .two-col{grid-template-columns:1fr}
+}
+@media (max-width:820px){
+  .shell{grid-template-columns:1fr;min-height:100dvh}
+  .side{padding:16px 14px 12px;position:static;height:auto;overflow:visible}
+  .profile{flex-direction:row;text-align:left;gap:13px;padding-bottom:12px;align-items:center}
+  .avatar{width:52px;height:52px;font-size:18px}
+  .profile h2{margin:0}
+  .nav{flex-direction:row;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+  .nav::-webkit-scrollbar{display:none}
+  .nav button{width:auto;white-space:nowrap;padding:10px 13px}
+  .side-foot{display:flex;align-items:center;gap:12px;padding-top:10px}
+  .side-actions{margin-top:0;flex:1}
+  .main{padding:20px 16px 24px}
+  .login-shell{grid-template-columns:1fr}
+  .login-brand{padding:30px 26px 8px}
+  .login-brand h1{font-size:24px;margin-top:16px}
+  .login-feats{display:none}
+  .login-form{padding:26px}
+  .searchbox input{width:160px}
+  .f-2{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= LOGIN ================= -->
+<div id="loginScreen" class="login-stage">
+  <div class="login-shell">
+    <div class="login-brand">
+      <div class="logo"><span class="mark" data-ic="logo"></span><b>EXP<em>ENSIO</em></b></div>
+      <h1>គ្រប់គ្រងចំណូល និងចំណាយ<br/>ឱ្យច្បាស់លាស់ រាល់ថ្ងៃ</h1>
+      <p>ប្រព័ន្ធគ្រប់គ្រងហិរញ្ញវត្ថុទំនើប — កត់ត្រាតាមផ្នែក របាយការណ៍ប្រចាំថ្ងៃ ខែ ឆ្នាំ និងទិន្នន័យរក្សាទុកនៅលើម៉ាស៊ីនផ្ទាល់របស់អ្នក។</p>
+      <div class="login-feats">
+        <div><span class="ic-wrap tone-teal" data-ic="shield"></span> ចូលប្រើប្រាស់ដាច់ដោយឡែក Admin និង User</div>
+        <div><span class="ic-wrap tone-violet" data-ic="chart"></span> របាយការណ៍ និងក្រាហ្វិកប្រចាំថ្ងៃ · ខែ · ឆ្នាំ</div>
+        <div><span class="ic-wrap tone-pink" data-ic="calc"></span> ប្រអប់ទឹកប្រាក់អាចគណនា 100+50×2 បានភ្លាមៗ</div>
+      </div>
+    </div>
+    <div class="login-form">
+      <!-- step 1: choose account type -->
+      <div id="loginChoice">
+        <div style="display:flex;align-items:flex-start;gap:12px">
+          <button type="button" class="chip-btn js-theme" style="flex:none;padding:9px 13px" title="Dark / Light Mode"></button>
+          <div style="flex:1"><h2>ចូលប្រើប្រាស់</h2>
+          <div class="desc" style="margin-bottom:0">ជ្រើសរើសប្រភេទគណនីរបស់អ្នក — Admin និង User មានទំព័រ Login ដាច់ដោយឡែកពីគ្នា</div></div>
+        </div>
+        <div style="height:22px"></div>
+        <div class="role-cards">
+          <button type="button" class="role-card" data-login-role="admin">
+            <span class="ic-wrap tone-teal" style="width:46px;height:46px;border-radius:13px" data-ic="shield"></span>
+            <span style="flex:1"><b>Admin Login</b><span class="rc-desc">អ្នកគ្រប់គ្រងប្រព័ន្ធ — សិទ្ធពេញលេញ គ្រប់គ្រងអ្នកប្រើប្រាស់ ផ្នែក និងថវិកា</span></span>
+            <span data-ic="arrow"></span>
+          </button>
+          <button type="button" class="role-card" data-login-role="user">
+            <span class="ic-wrap tone-violet" style="width:46px;height:46px;border-radius:13px" data-ic="users"></span>
+            <span style="flex:1"><b>User Login</b><span class="rc-desc">អ្នកប្រើប្រាស់ — កត់ត្រាចំណូល ចំណាយ និងមើលរបាយការណ៍</span></span>
+            <span data-ic="arrow"></span>
+          </button>
+        </div>
+        <p style="font-size:13px;color:var(--ink-3);line-height:1.7;margin:20px 0 0">គណនីនីមួយៗចូលតាមទំព័រផ្ទាល់ខ្លួន ហើយមើលឃើញតែមុខងារដែលត្រូវនឹងសិទ្ធរបស់ខ្លួនប៉ុណ្ណោះ។</p>
+      </div>
+      <!-- step 2: dedicated login form per role -->
+      <form id="loginForm" class="hidden" autocomplete="off">
+        <button type="button" class="back-link" id="loginBack">← ជ្រើសប្រភេទគណនីផ្សេង</button>
+        <div style="display:flex;align-items:flex-start;gap:12px">
+          <button type="button" class="chip-btn js-theme" style="flex:none;padding:9px 13px" title="Dark / Light Mode"></button>
+          <div style="flex:1"><h2 id="loginTitle">Admin Login</h2>
+          <div class="desc" style="margin-bottom:0" id="loginDesc"></div></div>
+        </div>
+        <div style="height:18px"></div>
+        <div class="form-err hidden" id="loginErr"></div>
+        <div class="f-row"><label>ឈ្មោះអ្នកប្រើ (Username)</label><input id="loginUser" type="text" placeholder="ឧ. admin" required /></div>
+        <div class="f-row"><label>ពាក្យសម្ងាត់ (Password)</label><input id="loginPass" type="password" placeholder="••••••••" required /></div>
+        <button class="btn primary" type="submit" style="width:100%;justify-content:center;padding:13px">ចូលប្រើប្រាស់ <span data-ic="arrow"></span></button>
+        <div class="demo-box" id="demoBox"></div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ================= APP ================= -->
+<div id="appScreen" class="stage hidden">
+  <div class="shell">
+    <aside class="side">
+      <div class="profile">
+        <div class="avatar"><span id="avatarFace">A</span></div>
+        <div><h2 id="sideName">—</h2><div class="role" id="sideRole">—</div></div>
+      </div>
+      <nav class="nav" id="mainNav"></nav>
+      <div class="side-foot">
+        <div class="logo"><span class="mark" data-ic="logo"></span><b>EXP<em>ENSIO</em></b></div>
+        <div class="side-actions">
+          <button class="chip-btn" id="themeBtn"></button>
+          <button class="chip-btn" id="logoutBtn"><span data-ic="logout"></span> ចាកចេញ</button>
+        </div>
+      </div>
+    </aside>
+    <main class="main" id="mainPanel"></main>
+  </div>
+</div>
+
+<div id="modalRoot"></div>
+<div class="toast" id="toast"></div>
+<input type="file" id="csvFile" accept=".csv,text/csv" class="hidden" />
+<input type="file" id="jsonFile" accept=".json,application/json" class="hidden" />
+
+<script>
+/* ============================================================
+   EXPENSIO — Income & Expense Manager (local-first, localStorage)
+   ============================================================ */
+"use strict";
+var LS_KEY = "expensio_db_v2";
+var LS_SESSION = "expensio_session_v2";
+
+/* ---------- icons (inline SVG, stroke style) ---------- */
+var IC = {
+  logo:'<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h13M13 3l4 4-4 4"/><path d="M20 17H7M11 13l-4 4 4 4"/></svg>',
+  home:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9.5 21v-6h5v6"/></svg>',
+  card:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="2.5" y="5" width="19" height="14" rx="3"/><path d="M2.5 10h19"/><path d="M6 15h4"/></svg>',
+  chart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M21 20H3"/></svg>',
+  folder:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg>',
+  users:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.4 3.4-5 6.5-5s5.7 1.6 6.5 5"/><path d="M16 5.2a3.5 3.5 0 0 1 0 5.9M18.5 15.4c1.7.7 2.7 2.1 3 4.1"/></svg>',
+  sliders:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M5 7h9M18 7h1M5 17h3M12 17h7"/><circle cx="16" cy="7" r="2.2"/><circle cx="10" cy="17" r="2.2"/><path d="M5 12h14" opacity="0"/><circle cx="12" cy="12" r="0"/></svg>',
+  gear:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M19 12a7 7 0 0 0-.14-1.4l2.1-1.63-2-3.46-2.49 1a7 7 0 0 0-2.42-1.4L13.66 2.6h-3.32L9.95 5.1a7 7 0 0 0-2.42 1.4l-2.49-1-2 3.46L5.14 10.6A7 7 0 0 0 5 12c0 .48.05.94.14 1.4L3.04 15.03l2 3.46 2.49-1a7 7 0 0 0 2.42 1.4l.39 2.51h3.32l.39-2.51a7 7 0 0 0 2.42-1.4l2.49 1 2-3.46-2.1-1.63c.09-.46.14-.92.14-1.4Z"/></svg>',
+  phone:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg>',
+  clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>',
+  plane:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4Z"/></svg>',
+  receipt:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h14v18l-2.3-1.5L14.4 21l-2.4-1.5L9.6 21l-2.3-1.5L5 21Z"/><path d="M9 8h6M9 12h6"/></svg>',
+  cart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.6"/><circle cx="17" cy="20" r="1.6"/><path d="M3 3h2l2.6 12.4a1.5 1.5 0 0 0 1.5 1.1h7.9a1.5 1.5 0 0 0 1.5-1.2L20.5 7H6"/></svg>',
+  refresh:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>',
+  plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+  file:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v5h5"/></svg>',
+  download:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M6.5 10.5 12 16l5.5-5.5"/><path d="M4 20h16"/></svg>',
+  upload:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M6.5 7.5 12 2l5.5 5.5"/><path d="M4 20h16"/></svg>',
+  printer:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M6 14h12v7H6z"/></svg>',
+  search:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.8-3.8"/></svg>',
+  edit:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3.5 20.5 7 8 19.5H4.5V16Z"/><path d="m14.5 6 3.5 3.5"/></svg>',
+  trash:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M6.5 7l1 13h9l1-13"/><path d="M10 11v6M14 11v6"/></svg>',
+  moon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.5A8.5 8.5 0 1 1 10.5 4a7 7 0 0 0 9.5 9.5Z"/></svg>',
+  sun:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.4M12 19.1v2.4M2.5 12h2.4M19.1 12h2.4M4.9 4.9l1.7 1.7M17.4 17.4l1.7 1.7M19.1 4.9l-1.7 1.7M6.6 17.4l-1.7 1.7"/></svg>',
+  logout:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3"/><path d="M10 17l5-5-5-5M15 12H3"/></svg>',
+  shield:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 5.8v5.4c0 4.6 3 7.7 7 9.3 4-1.6 7-4.7 7-9.3V5.8Z"/><path d="m9 11.6 2.2 2.2L15.4 9.6"/></svg>',
+  calc:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M8.5 7h7"/><path d="M8.5 12h.01M12 12h.01M15.5 12h.01M8.5 15.5h.01M12 15.5h.01M15.5 15.5h.01" stroke-width="2.6"/></svg>',
+  arrow:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg>',
+  wallet:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h13a1 1 0 0 1 1 1v2"/><path d="M3 7v10a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1H5a2 2 0 0 1-2-2Z"/><circle cx="16.8" cy="14" r="1.2" fill="currentColor" stroke="none"/></svg>',
+  trendUp:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 16 6-6 4 4 8-8"/><path d="M15 6h6v6"/></svg>',
+  trendDown:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 6 6 4-4 8 8"/><path d="M21 12v6h-6"/></svg>',
+  scale:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M7 21h10"/><path d="M12 6 5 7.5 7.5 13a3.2 3.2 0 0 1-5 0L5 7.5M12 6l7 1.5L16.5 13a3.2 3.2 0 0 0 5 0L19 7.5"/></svg>',
+  tag:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12.5v-9h9L21 12l-8.5 8.5Z"/><circle cx="8" cy="8" r="1.4" fill="currentColor" stroke="none"/></svg>',
+  x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 5l14 14M19 5 5 19"/></svg>',
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m4.5 12.5 5 5 10-11"/></svg>',
+  briefcase:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="12" rx="2.5"/><path d="M9 8V6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18"/></svg>',
+  home2:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>',
+  food:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v7a2 2 0 0 0 2 2v9M6 3v4M10 3v4a2 2 0 0 1-2 2"/><path d="M18 3c-1.7 1.2-2.5 3.4-2.5 6 0 2 1 3 2.5 3v9"/></svg>',
+  bolt:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h6l-1 8 9-12h-6Z"/></svg>',
+  heart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.5C6 16.5 3 13.2 3 9.6A4.6 4.6 0 0 1 7.6 5c1.7 0 3.3.9 4.4 2.3A5.4 5.4 0 0 1 16.4 5 4.6 4.6 0 0 1 21 9.6c0 3.6-3 6.9-9 10.9Z"/></svg>',
+  book:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4a2 2 0 0 1 2-2h13v18H7a2 2 0 0 0-2 2Z"/><path d="M5 20a2 2 0 0 1 2-2h13"/></svg>',
+  gift:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="8" width="17" height="4"/><path d="M5.5 12v9h13v-9M12 8v13"/><path d="M12 8a2.6 2.6 0 1 1 2.6-2.6c0 1.7-2.6 2.6-2.6 2.6Zm0 0a2.6 2.6 0 1 0-2.6-2.6C9.4 7.1 12 8 12 8Z"/></svg>',
+  coins:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="9" cy="9" r="6"/><path d="M14.5 4.6a6 6 0 1 1-9.9 9.9"/></svg>'
+};
+function icon(name){ return '<span style="display:inline-flex;align-items:center">' + (IC[name]||"") + "</span>"; }
+function mountIcons(root){
+  (root||document).querySelectorAll("[data-ic]").forEach(function(el){
+    el.innerHTML = IC[el.getAttribute("data-ic")] || "";
+    el.style.display = "inline-flex"; el.style.alignItems = "center";
+  });
+}
+
+/* ---------- utils ---------- */
+function $(s, r){ return (r||document).querySelector(s); }
+function $all(s, r){ return Array.prototype.slice.call((r||document).querySelectorAll(s)); }
+function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+function uid(){ return "id" + Date.now().toString(36) + Math.random().toString(36).slice(2, 8); }
+function fmt(n){ var v = Math.round((Number(n)||0) * 100) / 100; return "$" + v.toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2}); }
+function fmtShort(n){
+  var v = Number(n)||0;
+  if (Math.abs(v) >= 1000) return "$" + (Math.round(v/100)/10).toLocaleString("en-US") + "k";
+  return "$" + Math.round(v);
+}
+function todayStr(){ var d = new Date(); return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0"); }
+function monthStr(d){ d = d || new Date(); return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0"); }
+function fmtDate(s){
+  if (!s) return "—";
+  var p = s.split("-"); if (p.length < 3) return s;
+  return p[2] + "/" + p[1] + "/" + p[0];
+}
+var KH_MONTHS = ["មករា","កុម្ភៈ","មីនា","មេសា","ឧសភា","មិថុនា","កក្កដា","សីហា","កញ្ញា","តុលា","វិច្ឆិកា","ធ្នូ"];
+function monthLabel(ym){
+  var p = ym.split("-"); return KH_MONTHS[Number(p[1])-1] + " " + p[0];
+}
+var toastTimer = null;
+function toast(msg, isErr){
+  var t = $("#toast"); t.textContent = msg; t.className = "toast show" + (isErr ? " err" : "");
+  clearTimeout(toastTimer); toastTimer = setTimeout(function(){ t.className = "toast"; }, 3200);
+}
+function download(filename, text, mime){
+  var blob = new Blob([text], {type: (mime||"text/plain") + ";charset=utf-8"});
+  var a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = filename;
+  document.body.appendChild(a); a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 300);
+}
+
+/* ---------- calculator: safe arithmetic parser (no eval) ---------- */
+function calcExpr(expr){
+  if (expr == null) return NaN;
+  var s = String(expr).replace(/[$,\s]/g, "").replace(/×/g, "*").replace(/÷/g, "/").replace(/−/g, "-");
+  if (!s) return NaN;
+  if (!/^[0-9+\-*/().]+$/.test(s)) return NaN;
+  var pos = 0;
+  function peek(){ return s[pos]; }
+  function parseExpr(){
+    var v = parseTerm();
+    while (peek() === "+" || peek() === "-"){ var op = s[pos++]; var r = parseTerm(); v = (op === "+") ? v + r : v - r; }
+    return v;
+  }
+  function parseTerm(){
+    var v = parseFactor();
+    while (peek() === "*" || peek() === "/"){
+      var op = s[pos++];
+      var r = parseFactor();
+      if (op === "*") v = v * r; else { if (r === 0) throw new Error("div0"); v = v / r; }
+    }
+    return v;
+  }
+  function parseFactor(){
+    var c = peek();
+    if (c === "-"){ pos++; return -parseFactor(); }
+    if (c === "+"){ pos++; return parseFactor(); }
+    if (c === "("){ pos++; var v = parseExpr(); if (peek() !== ")") throw new Error("paren"); pos++; return v; }
+    var m = /^[0-9]*\.?[0-9]+/.exec(s.slice(pos));
+    if (!m) throw new Error("num");
+    pos += m[0].length;
+    return parseFloat(m[0]);
+  }
+  try {
+    var out = parseExpr();
+    if (pos !== s.length || typeof out !== "number" || !isFinite(out)) return NaN;
+    return Math.round(out * 100) / 100;
+  } catch(e){ return NaN; }
+}
+
+/* ---------- seed + storage ---------- */
+var CAT_COLORS = ["#2fd3ae","#8b5cf6","#2e8bff","#f0567a","#f5a524","#3ecf8e","#fb5e7e","#a78bfa"];
+
+function seedDB(){
+  var now = new Date(), y = now.getFullYear(), m = now.getMonth();
+  function d(monthsAgo, day){ var t = new Date(y, m - monthsAgo, Math.min(day, 28)); return t.getFullYear() + "-" + String(t.getMonth()+1).padStart(2,"0") + "-" + String(t.getDate()).padStart(2,"0"); }
+  function ym(monthsAgo){ var t = new Date(y, m - monthsAgo, 1); return t.getFullYear() + "-" + String(t.getMonth()+1).padStart(2,"0"); }
+  var users = [
+    {id:"u-admin", name:"Pich Sokphorkun", username:"admin", password:"admin123", role:"admin", active:true},
+    {id:"u-sophea", name:"Sophea Chan", username:"sophea", password:"user123", role:"user", active:true},
+    {id:"u-dara", name:"Dara Kim", username:"dara", password:"user123", role:"user", active:true}
+  ];
+  var sections = [
+    {id:"sec-home", name:"ទំព័រដើម", en:"Home", icon:"home2", type:"both", builtin:true},
+    {id:"sec-food", name:"អាហារ និងភេសជ្ជៈ", en:"Food & Drink", icon:"food", type:"expense", builtin:false},
+    {id:"sec-transport", name:"ការធ្វើដំណើរ", en:"Transport", icon:"plane", type:"expense", builtin:false},
+    {id:"sec-office", name:"សម្ភារៈការិយាល័យ", en:"Office Supplies", icon:"briefcase", type:"expense", builtin:false},
+    {id:"sec-salary", name:"ប្រាក់ខែ និងប្រាក់ចំណូល", en:"Salary & Income", icon:"coins", type:"income", builtin:false},
+    {id:"sec-health", name:"សុខភាព", en:"Health", icon:"heart", type:"expense", builtin:false},
+    {id:"sec-edu", name:"ការអប់រំ", en:"Education", icon:"book", type:"expense", builtin:false},
+    {id:"sec-util", name:"ទឹក ភ្លើង អ៊ីនធឺណិត", en:"Utilities", icon:"bolt", type:"expense", builtin:false}
+  ];
+  var partner = [["sec-salary","លក់ផលិតផលជូនអតិថិជន A", "in", 1250, "Sophea Chan"],
+    ["sec-salary","ប្រាក់ខែប្រចាំខែ", "in", 1800, "Dara Kim"],
+    ["sec-salary","គម្រោង Freelance", "in", 640, "Sophea Chan"],
+    ["sec-salary","លក់សេវាកម្មប្រឹក្សា", "in", 920, "Dara Kim"],
+    ["sec-office","សម្ភារៈការិយាល័យ", "out", 150, "Sophea Chan"],
+    ["sec-food","អាហារថ្ងៃត្រង់ជាមួយអតិថិជន", "out", 75.5, "Sophea Chan"],
+    ["sec-transport","ថ្លៃធ្វើដំណើរជួបអតិថិជន", "out", 450.25, "Dara Kim"],
+    ["sec-food","អាហារពេលល្ងាចជាមួយអតិថិជន", "out", 120, "Dara Kim"],
+    ["sec-transport","សណ្ឋាគារសម្រាប់ការងារ", "out", 275.75, "Sophea Chan"],
+    ["sec-office","កុំព្យូទ័រ និងគ្រឿងបន្លាស់", "out", 530, "Dara Kim"],
+    ["sec-util","ថ្លៃអ៊ីនធឺណិតប្រចាំខែ", "out", 45, "Sophea Chan"],
+    ["sec-food","កាហ្វេសម្រាប់ក្រុមការងារ", "out", 32.25, "Dara Kim"],
+    ["sec-health","ពិនិត្យសុខភាពប្រចាំឆ្នាំ", "out", 180, "Sophea Chan"],
+    ["sec-edu","វគ្គបណ្តុះបណ្តាលជំនាញ", "out", 260, "Dara Kim"],
+    ["sec-salary","ប្រាក់រង្វាន់ប្រចាំត្រីមាស", "in", 300, "Sophea Chan"],
+    ["sec-transport","ប្រេងឥន្ធនៈយានយន្ត", "out", 85.4, "Dara Kim"]];
+  var txs = [];
+  partner.forEach(function(p, i){
+    txs.push({id:"tx-seed-" + i, date:d(0, 3 + (i * 2) % 22), desc:p[1], type:p[2], amount:p[3], sectionId:p[0], by:p[4], note:""});
+  });
+  var trendBase = [4200, 3600, 5100, 4400, 5600, 4750];
+  trendBase.forEach(function(base, i){
+    var ago = 5 - i;
+    txs.push({id:"tx-t-in-" + i, date:d(ago, 5), desc:"ចំណូលលក់ប្រចាំខែ", type:"in", amount:base, sectionId:"sec-salary", by:"Sophea Chan", note:""});
+    txs.push({id:"tx-t-out-" + i, date:d(ago, 12), desc:"ចំណាយប្រតិបត្តិការប្រចាំខែ", type:"out", amount:Math.round(base * (0.42 + (i % 3) * 0.09)), sectionId:"sec-office", by:"Dara Kim", note:""});
+  });
+  return {
+    version: 2,
+    users: users, sections: sections, transactions: txs,
+    budgets: {"sec-food": 400, "sec-transport": 900, "sec-office": 700},
+    initialBalance: 0,
+    settings: { theme:"dark" },
+    seededFor: ym(0)
+  };
+}
+function loadDB(){
+  try {
+    var raw = localStorage.getItem(LS_KEY);
+    if (raw){ var db = JSON.parse(raw); if (db && db.version === 2){ if (typeof db.initialBalance !== "number") db.initialBalance = 0; return db; } }
+  } catch(e){}
+  var fresh = seedDB(); saveDB(fresh); return fresh;
+}
+function saveDB(db){ try { localStorage.setItem(LS_KEY, JSON.stringify(db)); } catch(e){ toast("ទំហំផ្ទុកពេញ — សូម Export ទិន្នន័យទុក", true); } }
+
+var DB = loadDB();
+var session = null;
+try { session = JSON.parse(localStorage.getItem(LS_SESSION) || "null"); } catch(e){ session = null; }
+var currentUser = null;
+if (session){ currentUser = DB.users.find(function(u){ return u.id === session.userId && u.active; }) || null; if (!currentUser) session = null; }
+
+var state = {
+  view: "home",
+  txQuery: "", txType: "all", txSection: "all", txFrom: "", txTo: "",
+  repPeriod: "month", repAnchor: monthStr(),
+  loginRole: "admin"
+};
+
+/* ---------- helpers over DB ---------- */
+function sectionById(id){ return DB.sections.find(function(s){ return s.id === id; }); }
+function txSum(list, type){ return list.filter(function(t){ return !type || t.type === type; }).reduce(function(a, t){ return a + (Number(t.amount)||0); }, 0); }
+function monthTxs(ym){
+  return DB.transactions.filter(function(t){ return t.date.slice(0,7) === ym; });
+}
+function isAdmin(){ return currentUser && currentUser.role === "admin"; }
+function canModify(tx){ return isAdmin() || (currentUser && tx.by === currentUser.name); }
+
+/* ---------- theme ---------- */
+function applyTheme(t){
+  document.documentElement.setAttribute("data-theme", t);
+  DB.settings.theme = t; saveDB(DB);
+  var label = t === "dark" ? IC.moon + " Dark" : IC.sun + " Light";
+  var b1 = $("#themeBtn"); if (b1) b1.innerHTML = label;
+  $all(".js-theme").forEach(function(b){ b.innerHTML = label; });
+}
+function toggleTheme(){ applyTheme(document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark"); }
+
+/* ---------- login ---------- */
+function showLogin(){
+  $("#loginScreen").classList.remove("hidden");
+  $("#appScreen").classList.add("hidden");
+  $("#loginForm").classList.add("hidden");
+  $("#loginChoice").classList.remove("hidden");
+  mountIcons($("#loginScreen"));
+  applyTheme(DB.settings.theme || "dark");
+}
+function openLoginForm(role){
+  state.loginRole = role;
+  $("#loginChoice").classList.add("hidden");
+  $("#loginForm").classList.remove("hidden");
+  $("#loginErr").classList.add("hidden");
+  var isA = role === "admin";
+  $("#loginTitle").textContent = isA ? "Admin Login" : "User Login";
+  $("#loginDesc").textContent = isA
+    ? "ទំព័រចូលប្រើប្រាស់សម្រាប់អ្នកគ្រប់គ្រង — សូមបញ្ចូលគណនី Admin របស់អ្នក"
+    : "ទំព័រចូលប្រើប្រាស់សម្រាប់អ្នកប្រើប្រាស់ — សូមបញ្ចូលគណនី User របស់អ្នក";
+  $("#demoBox").innerHTML = isA
+    ? "<b>គណនី Admin សាកល្បង</b><br/>Username <code>admin</code> · Password <code>admin123</code>"
+    : "<b>គណនី User សាកល្បង</b><br/>Username <code>sophea</code> · Password <code>user123</code>";
+  $("#loginUser").value = ""; $("#loginPass").value = "";
+  mountIcons($("#loginScreen"));
+  setTimeout(function(){ var u = $("#loginUser"); if (u) u.focus(); }, 60);
+}
+function doLogin(e){
+  e.preventDefault();
+  var un = $("#loginUser").value.trim().toLowerCase();
+  var pw = $("#loginPass").value;
+  var u = DB.users.find(function(x){ return x.username.toLowerCase() === un; });
+  var err = $("#loginErr");
+  function fail(msg){ err.textContent = msg; err.classList.remove("hidden"); }
+  if (!u || u.password !== pw) return fail("ឈ្មោះអ្នកប្រើ ឬពាក្យសម្ងាត់មិនត្រឹមត្រូវទេ");
+  if (!u.active) return fail("គណនីនេះត្រូវបានផ្អាកដំណើរការ — សូមទាក់ទង Admin");
+  if (u.role !== state.loginRole) return fail(u.role === "admin" ? "គណនីនេះជា Admin — សូមត្រឡប់ទៅចូលតាមទំព័រ Admin Login" : "គណនីនេះជា User — សូមត្រឡប់ទៅចូលតាមទំព័រ User Login");
+  currentUser = u;
+  session = { userId: u.id };
+  try { localStorage.setItem(LS_SESSION, JSON.stringify(session)); } catch(e2){}
+  err.classList.add("hidden");
+  enterApp();
+  toast("សូមស្វាគមន៍, " + u.name);
+}
+function doLogout(){
+  currentUser = null; session = null;
+  try { localStorage.removeItem(LS_SESSION); } catch(e){}
+  $("#loginPass").value = "";
+  showLogin();
+}
+function enterApp(){
+  $("#loginScreen").classList.add("hidden");
+  $("#appScreen").classList.remove("hidden");
+  $("#sideName").textContent = currentUser.name;
+  $("#sideRole").textContent = (currentUser.role === "admin" ? "អ្នកគ្រប់គ្រង (Admin)" : "អ្នកប្រើប្រាស់ (User)");
+  var face = $("#avatarFace");
+  face.textContent = currentUser.name.split(" ").map(function(w){ return w[0]; }).slice(0,2).join("").toUpperCase();
+  face.className = currentUser.role === "admin" ? "" : "alt";
+  renderNav();
+  applyTheme(DB.settings.theme || "dark");
+  go("home");
+}
+
+/* ---------- navigation ---------- */
+var NAV = [
+  {id:"home", label:"ទំព័រដើម", icon:"home"},
+  {id:"expenses", label:"ចំណូល / ចំណាយ", icon:"card"},
+  {id:"sections", label:"ផ្នែក និងថវិកា", icon:"folder"},
+  {id:"reports", label:"របាយការណ៍", icon:"chart"},
+  {id:"users", label:"អ្នកប្រើប្រាស់", icon:"users", admin:true},
+  {id:"settings", label:"ការកំណត់", icon:"sliders"},
+  {id:"support", label:"ជំនួយ", icon:"phone"}
+];
+function renderNav(){
+  $("#mainNav").innerHTML = NAV.filter(function(n){ return !n.admin || isAdmin(); }).map(function(n){
+    return '<button data-view="' + n.id + '" class="' + (state.view === n.id ? "active" : "") + '">' + IC[n.icon] + " " + esc(n.label) + "</button>";
+  }).join("");
+  $all("#mainNav button").forEach(function(b){ b.addEventListener("click", function(){ go(b.getAttribute("data-view")); }); });
+}
+function go(view){
+  state.view = view;
+  renderNav();
+  var m = $("#mainPanel");
+  if (view === "home") m.innerHTML = viewHome();
+  else if (view === "expenses") m.innerHTML = viewExpenses();
+  else if (view === "sections") m.innerHTML = viewSections();
+  else if (view === "reports") m.innerHTML = viewReports();
+  else if (view === "users") m.innerHTML = viewUsers();
+  else if (view === "settings") m.innerHTML = viewSettings();
+  else if (view === "support") m.innerHTML = viewSupport();
+  bindView(view);
+  window.scrollTo({top:0});
+}
+function topbar(title, sub, extra){
+  return '<div class="topbar"><div><h1>' + esc(title) + '</h1><div class="sub">' + esc(sub) + "</div></div>" +
+    '<div class="spacer"></div>' + (extra || "") + "</div>";
+}
+
+/* ---------- dashboard ---------- */
+function viewHome(){
+  var ym = monthStr();
+  var mt = monthTxs(ym);
+  var inc = txSum(mt, "in"), out = txSum(mt, "out"), bal = inc - out;
+  var initBal = Number(DB.initialBalance) || 0;
+  var totalBal = initBal + txSum(DB.transactions, "in") - txSum(DB.transactions, "out");
+  var prev = new Date(); prev.setMonth(prev.getMonth() - 1);
+  var pOut = txSum(monthTxs(monthStr(prev)), "out");
+  var pendingBudget = DB.sections.filter(function(s){ return DB.budgets[s.id]; }).length;
+  var recent = DB.transactions.slice().sort(function(a,b){ return b.date.localeCompare(a.date); }).slice(0, 5);
+  var six = [], labels = [];
+  for (var i = 5; i >= 0; i--){
+    var dd = new Date(); dd.setMonth(dd.getMonth() - i);
+    var key = monthStr(dd), list = monthTxs(key);
+    six.push({inc: txSum(list, "in"), out: txSum(list, "out")});
+    labels.push(KH_MONTHS[dd.getMonth()].slice(0, 4));
+  }
+  var maxV = Math.max.apply(null, six.map(function(s){ return Math.max(s.inc, s.out); }).concat([1]));
+  var pairBars = six.map(function(s, i){
+    return '<div class="bar-col"><div class="pair-vals">' +
+      '<div class="bar-val" style="color:var(--teal)">' + fmtShort(s.inc) + '</div>' +
+      '<div class="bar-val" style="color:var(--violet-2)">' + fmtShort(s.out) + '</div></div>' +
+      '<div class="bar-pair" style="height:112px">' +
+      '<div class="bar" style="height:' + Math.max(3, s.inc / maxV * 112) + 'px;background:linear-gradient(180deg,#3fe0bd,#0d9d7e)" title="ចំណូល ' + fmt(s.inc) + '"></div>' +
+      '<div class="bar" style="height:' + Math.max(3, s.out / maxV * 112) + 'px;background:linear-gradient(180deg,#c9bcf2,#8b5cf6)" title="ចំណាយ ' + fmt(s.out) + '"></div></div>' +
+      '<div class="cap">' + labels[i] + "</div></div>";
+  }).join("");
+  var catTotals = {};
+  mt.filter(function(t){ return t.type === "out"; }).forEach(function(t){ catTotals[t.sectionId] = (catTotals[t.sectionId]||0) + t.amount; });
+  var catArr = Object.keys(catTotals).map(function(k){ return {s: sectionById(k), v: catTotals[k]}; }).filter(function(x){ return x.s; })
+    .sort(function(a,b){ return b.v - a.v; }).slice(0, 5);
+  var maxC = Math.max.apply(null, catArr.map(function(x){ return x.v; }).concat([1]));
+  var catBars = catArr.length ? catArr.map(function(x){
+    var pct = out ? Math.round(x.v / out * 100) : 0;
+    return '<div class="bar-col"><div class="capv" style="color:var(--ink);font-weight:700;font-size:11.5px">' + fmtShort(x.v) + '</div>' +
+      '<div class="capv">' + pct + '%</div>' +
+      '<div class="bar single" style="height:' + Math.max(3, x.v / maxC * 100) + 'px;background:linear-gradient(180deg,#a78bfa,#7c3aed)" title="' + esc(x.s.en) + " " + fmt(x.v) + " (" + pct + '%)"></div>' +
+      '<div class="cap">' + esc(x.s.en.split(" ")[0]) + "</div></div>";
+  }).join("") : '<div class="empty">មិនទាន់មានចំណាយក្នុងខែនេះ</div>';
+
+  var kpi = [
+    {icon:"clock", tone:"tone-violet", label:"ចំណូលខែនេះ (" + monthLabel(ym) + ")", val: fmt(inc)},
+    {icon:"plane", tone:"tone-blue", label:"ចំណាយខែនេះ", val: fmt(out)},
+    {icon:"receipt", tone:"tone-pink", label:"សមតុល្យសុទ្ធ (ចំណូល − ចំណាយ)", val: fmt(bal)},
+    {icon:"wallet", tone:"tone-mint", label:"ប្រាក់ដើមគ្រា (Initial Balance)", val: fmt(initBal)},
+    {icon:"scale", tone:"tone-blue", label:"សមតុល្យសរុបទាំងអស់ (ដើមគ្រា + ចំណូល − ចំណាយ)", val: fmt(totalBal)},
+    {icon:"cart", tone:"tone-amber", label:"ប្រតិបត្តិការក្នុងខែនេះ", val: mt.length + " កំណត់ត្រា"},
+    {icon:"refresh", tone:"tone-teal", label:"ផ្នែកមានកំណត់ថវិកា", val: pendingBudget + " ផ្នែក"}
+  ].map(function(k){
+    return '<div class="kpi-row"><span class="ic-wrap ' + k.tone + '">' + IC[k.icon] + '</span><span class="lbl">' + esc(k.label) + '</span><span class="val num">' + esc(k.val) + "</span></div>";
+  }).join("");
+
+  var rows = recent.map(function(t){
+    var s = sectionById(t.sectionId);
+    return "<tr><td>" + esc(t.desc) + '<div style="font-size:12px;color:var(--ink-3)">' + fmtDate(t.date) + "</div></td>" +
+      "<td>" + esc(t.by) + "</td>" +
+      "<td>" + (s ? esc(s.name) : "—") + "</td>" +
+      '<td class="amt ' + (t.type === "in" ? "in" : "out") + '">' + (t.type === "in" ? "+" : "−") + fmt(t.amount) + "</td></tr>";
+  }).join("");
+
+  return topbar("ទំព័រដើម", "សង្ខេបហិរញ្ញវត្ថុប្រចាំ " + monthLabel(ym),
+      '<button class="btn primary" data-act="new-tx">' + IC.plus + " ប្រតិបត្តិការថ្មី</button>") +
+    '<div class="grid-dash">' +
+      '<section class="card"><h3>សង្ខេបខែនេះ <span class="r">This month</span></h3><div class="kpi-list">' + kpi + "</div></section>" +
+      '<section class="card"><h3>ប្រតិបត្តិការថ្មីៗ <span class="r">Recent</span></h3><div class="tbl-wrap"><table><thead><tr><th>ការពិពណ៌នា</th><th>អ្នកបញ្ចូល</th><th>ផ្នែក</th><th class="amt">ទឹកប្រាក់</th></tr></thead><tbody>' +
+        (rows || '<tr><td colspan="4" class="empty">មិនទាន់មានប្រតិបត្តិការ</td></tr>') + "</tbody></table></div></section>" +
+    "</div>" +
+    '<section class="card" style="margin-top:18px"><h3>ចូលរហ័ស <span class="r">Quick Access</span></h3><div class="quick" style="margin-top:2px">' +
+      '<button data-act="new-tx"><span class="dot dot-pink">' + IC.card + "</span> + ចំណាយ / ចំណូលថ្មី</button>" +
+      '<button data-act="add-section"><span class="dot dot-blue">' + IC.file + "</span> + បន្ថែមផ្នែក</button>" +
+      '<button data-act="goto-reports"><span class="dot dot-teal">' + IC.receipt + "</span> + បង្កើតរបាយការណ៍</button>" +
+      '<button data-act="goto-expenses"><span class="dot dot-grey">' + IC.cart + "</span> + មើលប្រតិបត្តិការ</button>" +
+    "</div></section>" +
+    '<section class="card" style="margin-top:18px"><h3>របាយការណ៍ប្រចាំខែ <span class="r">Monthly Report</span></h3><div class="charts">' +
+      '<div><p class="chart-title">ចំណូល ទល់នឹង ចំណាយ — ៦ ខែចុងក្រោយ</p><div class="bars">' + pairBars + '</div><div class="legend"><span><i style="background:#0d9d7e"></i>ចំណូល</span><span><i style="background:#8b5cf6"></i>ចំណាយ</span></div></div>' +
+      '<div><p class="chart-title">ចំណាយតាមផ្នែក — ខែនេះ</p><div class="bars">' + catBars + "</div></div>" +
+    "</div></section>";
+}
+
+/* ---------- expenses view ---------- */
+function filteredTxs(){
+  var q = state.txQuery.trim().toLowerCase();
+  return DB.transactions.filter(function(t){
+    if (state.txType !== "all" && t.type !== state.txType) return false;
+    if (state.txSection !== "all" && t.sectionId !== state.txSection) return false;
+    if (state.txFrom && t.date < state.txFrom) return false;
+    if (state.txTo && t.date > state.txTo) return false;
+    if (q && (t.desc + " " + t.by + " " + (sectionById(t.sectionId)||{}).name).toLowerCase().indexOf(q) < 0) return false;
+    return true;
+  }).sort(function(a, b){ return b.date.localeCompare(a.date); });
+}
+function txRow(t){
+  var s = sectionById(t.sectionId);
+  var acts = canModify(t)
+    ? '<button class="icon-btn" data-edit="' + t.id + '" title="កែប្រែ">' + IC.edit + '</button><button class="icon-btn del" data-del="' + t.id + '" title="លុប">' + IC.trash + "</button>"
+    : '<span style="color:var(--ink-3);font-size:12px">—</span>';
+  return "<tr><td style='white-space:nowrap'>" + fmtDate(t.date) + "</td>" +
+    "<td><b style='font-weight:600'>" + esc(t.desc) + "</b>" + (t.note ? '<div style="font-size:12px;color:var(--ink-3)">' + esc(t.note) + "</div>" : "") + "</td>" +
+    "<td>" + (s ? esc(s.name) : "—") + "</td>" +
+    "<td>" + esc(t.by) + "</td>" +
+    '<td><span class="pill ' + (t.type === "in" ? "in" : "out") + '">' + (t.type === "in" ? "ចំណូល" : "ចំណាយ") + "</span></td>" +
+    '<td class="amt ' + (t.type === "in" ? "in" : "out") + '">' + (t.type === "in" ? "+" : "−") + fmt(t.amount) + "</td>" +
+    '<td><div class="row-actions">' + acts + "</div></td></tr>";
+}
+function viewExpenses(){
+  var list = filteredTxs();
+  var inc = txSum(list, "in"), out = txSum(list, "out");
+  var secOpts = '<option value="all">គ្រប់ផ្នែក</option>' + DB.sections.map(function(s){
+    return '<option value="' + s.id + '"' + (state.txSection === s.id ? " selected" : "") + ">" + esc(s.name) + "</option>";
+  }).join("");
+  return topbar("ចំណូល / ចំណាយ", "កត់ត្រា និងគ្រប់គ្រងប្រតិបត្តិការទាំងអស់",
+      '<button class="btn ghost" data-act="export-csv">' + IC.download + " Export CSV</button>" +
+      '<button class="btn ghost" data-act="import-csv">' + IC.upload + " Import CSV</button>" +
+      '<button class="btn ghost" data-act="print-tx">' + IC.printer + " Print / PDF</button>" +
+      '<button class="btn primary" data-act="new-tx">' + IC.plus + " ថ្មី</button>") +
+    '<div class="stats">' +
+      '<div class="stat"><div class="lbl">' + IC.trendUp + " ចំណូលសរុប (តាមតម្រង)</div><div class='big num' style='color:var(--income)'>" + fmt(inc) + "</div></div>" +
+      '<div class="stat"><div class="lbl">' + IC.trendDown + " ចំណាយសរុប (តាមតម្រង)</div><div class='big num' style='color:var(--expense)'>" + fmt(out) + "</div></div>" +
+      '<div class="stat"><div class="lbl">' + IC.scale + " សមតុល្យ</div><div class='big num'>" + fmt(inc - out) + "</div></div>" +
+      '<div class="stat"><div class="lbl">' + IC.receipt + " ចំនួនកំណត់ត្រា</div><div class='big num'>" + list.length + "</div></div>" +
+    "</div>" +
+    '<section class="card"><div class="filters">' +
+      '<div class="seg"><button data-ftype="all" class="' + (state.txType === "all" ? "active" : "") + '">ទាំងអស់</button>' +
+      '<button data-ftype="in" class="' + (state.txType === "in" ? "active" : "") + '">ចំណូល</button>' +
+      '<button data-ftype="out" class="' + (state.txType === "out" ? "active out" : "") + '">ចំណាយ</button></div>' +
+      '<select id="fSection">' + secOpts + "</select>" +
+      '<input type="date" id="fFrom" value="' + esc(state.txFrom) + '" title="ពីថ្ងៃ" />' +
+      '<input type="date" id="fTo" value="' + esc(state.txTo) + '" title="ដល់ថ្ងៃ" />' +
+      '<div class="searchbox">' + IC.search + '<input type="text" id="fQuery" placeholder="ស្វែងរក…" value="' + esc(state.txQuery) + '" /></div>' +
+      (isAdmin() ? '<button class="btn ghost sm" data-act="delete-filtered" style="margin-left:auto">' + IC.trash + " លុបតាមតម្រង</button>" : "") +
+    '</div><div class="tbl-wrap tbl-scroll5"><table><thead><tr><th>កាលបរិច្ឆេទ</th><th>ការពិពណ៌នា</th><th>ផ្នែក</th><th>អ្នកបញ្ចូល</th><th>ប្រភេទ</th><th class="amt">ទឹកប្រាក់ ($)</th><th></th></tr></thead><tbody>' +
+      (list.length ? list.map(txRow).join("") : '<tr><td colspan="7" class="empty">រកមិនឃើញប្រតិបត្តិការ — សាកល្បងផ្លាស់ប្តូរតម្រង ឬបន្ថែមថ្មី</td></tr>') +
+    "</tbody></table></div></section>";
+}
+
+/* ---------- sections & budgets view ---------- */
+function viewSections(){
+  var cards = DB.sections.map(function(s, idx){
+    var list = DB.transactions.filter(function(t){ return t.sectionId === s.id; });
+    var total = txSum(list);
+    var budget = DB.budgets[s.id];
+    var bar = "";
+    if (budget){
+      var spent = txSum(list.filter(function(t){ return t.type === "out"; }));
+      var pct = Math.min(100, Math.round(spent / budget * 100));
+      var col = pct >= 90 ? "var(--danger)" : (pct >= 70 ? "var(--amber)" : "var(--teal)");
+      bar = '<div style="margin-top:12px"><div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--ink-3)"><span>ថវិកា ' + fmt(budget) + '</span><span class="num" style="color:' + col + ';font-weight:700">' + pct + '%</span></div>' +
+        '<div style="height:8px;border-radius:99px;background:var(--card-2);margin-top:6px;overflow:hidden"><div style="height:100%;width:' + pct + '%;background:' + col + ';border-radius:99px"></div></div>' +
+        '<div style="font-size:12.5px;color:var(--ink-3);margin-top:6px">បានចំណាយ <span class="num">' + fmt(spent) + "</span> · នៅសល់ <span class='num'>" + fmt(budget - spent) + "</span></div></div>";
+    }
+    var acts = isAdmin() && !s.builtin
+      ? '<button class="icon-btn" data-edit-sec="' + s.id + '">' + IC.edit + '</button><button class="icon-btn del" data-del-sec="' + s.id + '">' + IC.trash + "</button>"
+      : (isAdmin() ? '<button class="icon-btn" data-edit-sec="' + s.id + '">' + IC.edit + "</button>" : "");
+    return '<div class="cat-card"><div class="top"><span class="cat-dot" style="background:' + CAT_COLORS[idx % CAT_COLORS.length] + '">' + (IC[s.icon] || IC.tag) + '</span>' +
+      '<div style="flex:1;min-width:0"><h4>' + esc(s.name) + '</h4><div class="meta">' + esc(s.en) + " · " + (s.type === "in" ? "ចំណូល" : s.type === "out" ? "ចំណាយ" : "ទាំងពីរ") + '</div></div>' + acts + "</div>" +
+      '<div class="foot"><span style="font-size:12.5px;color:var(--ink-3)">' + list.length + ' កំណត់ត្រា</span><span class="sum num">' + fmt(total) + "</span></div>" + bar + "</div>";
+  }).join("");
+  var initBal = Number(DB.initialBalance) || 0;
+  var allInc = txSum(DB.transactions, "in"), allOut = txSum(DB.transactions, "out");
+  var totalBal = initBal + allInc - allOut;
+  var initCells = [
+    {l:"ប្រាក់ដើមគ្រា (Initial Balance)", v: fmt(initBal), c:"var(--teal)"},
+    {l:"ចំណូលសរុបទាំងអស់", v: fmt(allInc), c:"var(--income)"},
+    {l:"ចំណាយសរុបទាំងអស់", v: fmt(allOut), c:"var(--expense)"},
+    {l:"សមតុល្យសរុប (ដើមគ្រា + ចំណូល − ចំណាយ)", v: fmt(totalBal), c:"var(--ink)"}
+  ].map(function(c){
+    return '<div class="init-cell"><div class="il">' + c.l + '</div><div class="iv" style="color:' + c.c + '">' + c.v + "</div></div>";
+  }).join("");
+  var initEdit = "";
+  if (isAdmin()){
+    initEdit = '<div style="border-top:1px solid var(--line);margin-top:16px;padding-top:16px">' +
+      '<div class="f-row" style="margin-bottom:0;max-width:460px"><label>បញ្ចូល / កែប្រែប្រាក់ដើមគ្រា ($) — អាចវាយសមីការបាន ដូចជា 1000+500</label>' +
+      '<div style="display:flex;gap:10px;flex-wrap:wrap"><div class="amount-wrap" style="flex:1;min-width:180px"><span class="cur">$</span>' +
+      '<input type="text" id="initBalIn" inputmode="decimal" placeholder="0.00" value="' + (initBal || "") + '" style="width:100%" /></div>' +
+      '<button class="btn primary" id="initSave">' + IC.check + " រក្សាទុក</button></div>" +
+      '<div class="calc-hint" id="initHint">' + IC.calc + ' <span>លទ្ធផលគណនា៖</span><span class="res" id="initRes">—</span></div></div></div>';
+  } else {
+    initEdit = '<p style="font-size:13px;color:var(--ink-3);margin:14px 0 0">មានតែ Admin ទេដែលអាចកំណត់ប្រាក់ដើមគ្រាបាន។</p>';
+  }
+  return topbar("ផ្នែក និងថវិកា", "គ្រប់គ្រងផ្នែកនីមួយៗ កំណត់ថវិកាប្រចាំខែ និងប្រាក់ដើមគ្រា",
+      isAdmin() ? '<button class="btn primary" data-act="add-section">' + IC.plus + " បន្ថែមផ្នែក</button>" : "") +
+    '<div class="cat-grid">' + cards + "</div>" +
+    '<section class="card" style="margin-top:18px"><h3>ប្រាក់ដើមគ្រា <span class="r">Initial Balance</span></h3><div class="init-grid">' + initCells + "</div>" + initEdit + "</section>";
+}
+
+/* ---------- reports view ---------- */
+function repData(){
+  var p = state.repPeriod, a = state.repAnchor, list, title;
+  if (p === "day"){ list = DB.transactions.filter(function(t){ return t.date === a; }); title = "របាយការណ៍ប្រចាំថ្ងៃ — " + fmtDate(a); }
+  else if (p === "month"){ list = monthTxs(a); title = "របាយការណ៍ប្រចាំខែ — " + monthLabel(a); }
+  else { list = DB.transactions.filter(function(t){ return t.date.slice(0,4) === a; }); title = "របាយការណ៍ប្រចាំឆ្នាំ " + a; }
+  list = list.slice().sort(function(x, y){ return x.date.localeCompare(y.date); });
+  return { list: list, title: title, inc: txSum(list, "in"), out: txSum(list, "out") };
+}
+function viewReports(){
+  var d = repData();
+  var anchorInput = "";
+  if (state.repPeriod === "day") anchorInput = '<input type="date" id="repAnchor" value="' + esc(state.repAnchor) + '" />';
+  else if (state.repPeriod === "month") anchorInput = '<input type="month" id="repAnchor" value="' + esc(state.repAnchor) + '" />';
+  else {
+    var yrs = {}; DB.transactions.forEach(function(t){ yrs[t.date.slice(0,4)] = 1; }); yrs[new Date().getFullYear()] = 1;
+    anchorInput = '<select id="repAnchor">' + Object.keys(yrs).sort().map(function(y){ return '<option value="' + y + '"' + (state.repAnchor === y ? " selected" : "") + ">" + y + "</option>"; }).join("") + "</select>";
+  }
+  var bySec = {};
+  d.list.forEach(function(t){ var k = t.sectionId; bySec[k] = bySec[k] || {inc:0, out:0, n:0}; bySec[k][t.type === "in" ? "inc" : "out"] += t.amount; bySec[k].n++; });
+  var maxS = Math.max.apply(null, Object.keys(bySec).map(function(k){ return bySec[k].inc + bySec[k].out; }).concat([1]));
+  var secRows = Object.keys(bySec).map(function(k){
+    var s = sectionById(k) || {name: k, en: ""}, v = bySec[k];
+    return "<tr><td><b style='font-weight:600'>" + esc(s.name) + '</b><div style="font-size:12px;color:var(--ink-3)">' + v.n + ' កំណត់ត្រា</div></td>' +
+      '<td style="min-width:130px"><div style="height:8px;border-radius:99px;background:var(--card-2);overflow:hidden"><div style="height:100%;width:' + Math.round((v.inc + v.out) / maxS * 100) + '%;background:linear-gradient(90deg,#0d9d7e,#8b5cf6)"></div></div></td>' +
+      '<td class="amt in">' + fmt(v.inc) + '</td><td class="amt out">' + fmt(v.out) + '</td><td class="amt">' + fmt(v.inc - v.out) + "</td></tr>";
+  }).join("");
+  var txRows = d.list.map(function(t){
+    var s = sectionById(t.sectionId);
+    return "<tr><td style='white-space:nowrap'>" + fmtDate(t.date) + "</td><td>" + esc(t.desc) + "</td><td>" + (s ? esc(s.name) : "—") + "</td><td>" + esc(t.by) + '</td><td><span class="pill ' + (t.type === "in" ? "in" : "out") + '">' + (t.type === "in" ? "ចំណូល" : "ចំណាយ") + '</span></td><td class="amt ' + (t.type === "in" ? "in" : "out") + '">' + (t.type === "in" ? "+" : "−") + fmt(t.amount) + "</td></tr>";
+  }).join("");
+  return topbar("របាយការណ៍", "របាយការណ៍ចំណូល ចំណាយ ប្រចាំថ្ងៃ ខែ និងឆ្នាំ",
+      '<button class="btn ghost" data-act="export-rep">' + IC.download + " Export CSV</button>" +
+      '<button class="btn primary" data-act="print-rep">' + IC.printer + " Print Preview / PDF</button>") +
+    '<div class="filters"><div class="seg">' +
+      '<button data-period="day" class="' + (state.repPeriod === "day" ? "active" : "") + '">ប្រចាំថ្ងៃ</button>' +
+      '<button data-period="month" class="' + (state.repPeriod === "month" ? "active" : "") + '">ប្រចាំខែ</button>' +
+      '<button data-period="year" class="' + (state.repPeriod === "year" ? "active" : "") + '">ប្រចាំឆ្នាំ</button></div>' + anchorInput +
+      '<span style="font-size:14px;color:var(--ink-2);font-weight:600">' + esc(d.title) + "</span></div>" +
+    '<div class="stats">' +
+      '<div class="stat"><div class="lbl">' + IC.trendUp + ' ចំណូលសរុប</div><div class="big num" style="color:var(--income)">' + fmt(d.inc) + "</div></div>" +
+      '<div class="stat"><div class="lbl">' + IC.trendDown + ' ចំណាយសរុប</div><div class="big num" style="color:var(--expense)">' + fmt(d.out) + "</div></div>" +
+      '<div class="stat"><div class="lbl">' + IC.scale + ' សមតុល្យសុទ្ធ</div><div class="big num">' + fmt(d.inc - d.out) + "</div></div>" +
+      '<div class="stat"><div class="lbl">' + IC.receipt + ' កំណត់ត្រាសរុប</div><div class="big num">' + d.list.length + "</div></div>" +
+    "</div>" +
+    '<section class="card"><h3>សង្ខេបតាមផ្នែក</h3><div class="tbl-wrap"><table><thead><tr><th>ផ្នែក</th><th>ទំហំធៀបនឹងសរុប</th><th class="amt">ចំណូល</th><th class="amt">ចំណាយ</th><th class="amt">សមតុល្យ</th></tr></thead><tbody>' +
+      (secRows || '<tr><td colspan="5" class="empty">មិនមានទិន្នន័យក្នុងរយៈពេលនេះ</td></tr>') + "</tbody></table></div></section>" +
+    '<section class="card" style="margin-top:18px"><h3>លម្អិតប្រតិបត្តិការ</h3><div class="tbl-wrap"><table><thead><tr><th>កាលបរិច្ឆេទ</th><th>ការពិពណ៌នា</th><th>ផ្នែក</th><th>អ្នកបញ្ចូល</th><th>ប្រភេទ</th><th class="amt">ទឹកប្រាក់ ($)</th></tr></thead><tbody>' +
+      (txRows || '<tr><td colspan="6" class="empty">មិនមានទិន្នន័យក្នុងរយៈពេលនេះ</td></tr>') + "</tbody></table></div></section>";
+}
+
+/* ---------- users view (admin) ---------- */
+function viewUsers(){
+  if (!isAdmin()) return '<div class="card"><div class="empty">ទំព័រនេះសម្រាប់តែ Admin ប៉ុណ្ណោះ</div></div>';
+  var rows = DB.users.map(function(u){
+    var me = currentUser && u.id === currentUser.id;
+    return "<tr><td><b style='font-weight:600'>" + esc(u.name) + "</b>" + (me ? ' <span style="font-size:12px;color:var(--teal)">(អ្នក)</span>' : "") + "</td>" +
+      "<td class='num'>" + esc(u.username) + "</td>" +
+      '<td><span class="pill ' + (u.role === "admin" ? "in" : "out") + '">' + (u.role === "admin" ? "Admin" : "User") + "</span></td>" +
+      "<td>" + (u.active ? '<span style="color:var(--income);font-weight:600">កំពុងប្រើ</span>' : '<span style="color:var(--ink-3)">ផ្អាក</span>') + "</td>" +
+      '<td><div class="row-actions"><button class="icon-btn" data-edit-user="' + u.id + '">' + IC.edit + "</button>" +
+      (me ? "" : '<button class="icon-btn del" data-del-user="' + u.id + '">' + IC.trash + "</button>") + "</div></td></tr>";
+  }).join("");
+  return topbar("អ្នកប្រើប្រាស់", "គ្រប់គ្រងគណនី Admin និង User — សិทธิដាច់ដោយឡែកពីគ្នា",
+      '<button class="btn primary" data-act="add-user">' + IC.plus + " បន្ថែមអ្នកប្រើ</button>") +
+    '<section class="card"><div class="tbl-wrap"><table><thead><tr><th>ឈ្មោះពេញ</th><th>Username</th><th>តួនាទី</th><th>ស្ថានភាព</th><th></th></tr></thead><tbody>' + rows + "</tbody></table></div>" +
+    '<p style="font-size:13px;color:var(--ink-3);margin:14px 0 0">Admin មានសិទ្ធពេញលេញ៖ គ្រប់គ្រងផ្នែក ថវិកា អ្នកប្រើប្រាស់ និងលុបទិន្នន័យ។ User អាចកត់ត្រា និងកែ/លុបបានតែប្រតិបត្តិការរបស់ខ្លួនប៉ុណ្ណោះ។</p></section>';
+}
+
+/* ---------- settings view ---------- */
+function viewSettings(){
+  var theme = document.documentElement.getAttribute("data-theme");
+  return topbar("ការកំណត់", "គណនី រូបរាង និងទិន្នន័យនៅលើម៉ាស៊ីនផ្ទាល់") +
+    '<div class="two-col">' +
+    '<section class="card"><h3>ព័ត៌មានគណនី</h3>' +
+      '<div class="f-row"><label>ឈ្មោះពេញ</label><input id="setName" value="' + esc(currentUser.name) + '" /></div>' +
+      '<div class="f-row"><label>Username</label><input value="' + esc(currentUser.username) + '" disabled style="opacity:.6" /></div>' +
+      '<div class="f-row"><label>ពាក្យសម្ងាត់ថ្មី (ទុកទទេ បើមិនប្តូរ)</label><input id="setPass" type="password" placeholder="••••••••" /></div>' +
+      '<button class="btn primary" data-act="save-profile">' + IC.check + " រក្សាទុក</button></section>" +
+    '<div style="display:flex;flex-direction:column;gap:18px">' +
+    '<section class="card"><h3>រូបរាង (Appearance)</h3>' +
+      '<div style="display:flex;align-items:center;gap:12px"><span style="flex:1;font-size:14.5px;color:var(--ink-2)">របៀបបង្ហាញបច្ចុប្បន្ន៖ <b style="color:var(--ink)">' + (theme === "dark" ? "Dark Mode" : "Light Mode") + '</b></span><button class="btn ghost" data-act="toggle-theme">' + (theme === "dark" ? IC.sun : IC.moon) + " ប្តូររបៀប</button></div></section>" +
+    '<section class="card"><h3>ទិន្នន័យ (Data)</h3>' +
+      '<p style="font-size:13.5px;color:var(--ink-3);margin:0 0 14px;line-height:1.7">ទិន្នន័យទាំងអស់រក្សាទុកនៅលើម៉ាស៊ីនផ្ទាល់ (Local Storage) ក្នុងកម្មវិធីរុករកនេះ។ អ្នកអាចនាំចេញ/នាំចូលជា CSV ឬបម្រុងទុកជាឯកសារ JSON ពេញលេញ។</p>' +
+      '<div style="display:flex;gap:10px;flex-wrap:wrap">' +
+      '<button class="btn ghost" data-act="backup-json">' + IC.download + " Backup (JSON)</button>" +
+      '<button class="btn ghost" data-act="restore-json">' + IC.upload + " Restore (JSON)</button>" +
+      (isAdmin() ? '<button class="btn danger" data-act="reset-data">' + IC.refresh + " ស្តារទិន្នន័យដើម</button>" : "") +
+      "</div></section></div></div>";
+}
+
+/* ---------- support view ---------- */
+function viewSupport(){
+  var rows = [
+    {icon:"phone", tone:"tone-teal", t:"ទូរស័ព្ទជំនួយ", d:"+855 12 345 678 — ចន្ទ ដល់ សុក្រ ម៉ោង 8:00–17:00"},
+    {icon:"receipt", tone:"tone-violet", t:"អ៊ីមែល", d:"support@expensio.app — ឆ្លើយតបក្នុងរយៈពេល 24 ម៉ោង"},
+    {icon:"clock", tone:"tone-amber", t:"មគ្គុទ្ទេសក៍រហ័ស", d:"បន្ថែមប្រតិបត្តិការ៖ ចុច «+ ថ្មី» — ក្នុងប្រអប់ទឹកប្រាក់ អ្នកអាចវាយសមីការ ដូចជា 100+50*2 ឬ (200+50)/2 រួចប្រព័ន្ធគណនាឱ្យភ្លាមៗ"}
+  ].map(function(r){
+    return '<div class="list-row"><span class="ic-wrap ' + r.tone + '" style="width:40px;height:40px;border-radius:11px">' + IC[r.icon] + '</span><div class="grow"><b>' + r.t + "</b><div>" + r.d + "</div></div></div>";
+  }).join("");
+  return topbar("ជំនួយ", "ទាក់ទងក្រុមការងារ Expensio") +
+    '<section class="card"><h3>បណ្តាញទំនាក់ទំនង</h3>' + rows + "</section>" +
+    '<section class="card" style="margin-top:18px"><h3>សំណួរញឹកញាប់</h3>' +
+    '<div class="list-row"><div class="grow"><b>ទិន្នន័យរបស់ខ្ញុំរក្សាទុកនៅឯណា?</b><div>នៅលើម៉ាស៊ីនផ្ទាល់របស់អ្នក (Local Storage) — មិនផ្ញើទៅ Server ណាមួយឡើយ។ សូម Export CSV ឬ Backup JSON ទុកជាប្រចាំ។</div></div></div>' +
+    '<div class="list-row"><div class="grow"><b>តើធ្វើដូចម្តេចដើម្បីបោះពុម្ពជា PDF?</b><div>ចូលទៅ «របាយការណ៍» រួចចុច «Print Preview / PDF» — ក្នុងផ្ទាំងបោះពុម្ព ជ្រើស «Save as PDF»។</div></div></div>' +
+    '<div class="list-row"><div class="grow"><b>ភ្លេចពាក្យសម្ងាត់?</b><div>សូមទាក់ទង Admin ដើម្បីកំណត់ពាក្យសម្ងាត់ថ្មីនៅទំព័រ «អ្នកប្រើប្រាស់»។</div></div></div></section>';
+}
+
+/* ---------- view bindings ---------- */
+function bindView(view){
+  mountIcons($("#mainPanel"));
+  $all("[data-act]").forEach(function(b){ b.addEventListener("click", function(){ handleAct(b.getAttribute("data-act"), b); }); });
+  if (view === "expenses"){
+    var deb = null;
+    var q = $("#fQuery");
+    if (q) q.addEventListener("input", function(){ clearTimeout(deb); deb = setTimeout(function(){ state.txQuery = q.value; go("expenses"); var nq = $("#fQuery"); if (nq){ nq.focus(); nq.setSelectionRange(nq.value.length, nq.value.length); } }, 350); });
+    $all("[data-ftype]").forEach(function(b){ b.addEventListener("click", function(){ state.txType = b.getAttribute("data-ftype"); go("expenses"); }); });
+    var fs = $("#fSection"); if (fs) fs.addEventListener("change", function(){ state.txSection = fs.value; go("expenses"); });
+    var ff = $("#fFrom"); if (ff) ff.addEventListener("change", function(){ state.txFrom = ff.value; go("expenses"); });
+    var ft = $("#fTo"); if (ft) ft.addEventListener("change", function(){ state.txTo = ft.value; go("expenses"); });
+    $all("[data-edit]").forEach(function(b){ b.addEventListener("click", function(){ openTxModal(b.getAttribute("data-edit")); }); });
+    $all("[data-del]").forEach(function(b){ b.addEventListener("click", function(){ delTx(b.getAttribute("data-del")); }); });
+  }
+  if (view === "sections"){
+    $all("[data-edit-sec]").forEach(function(b){ b.addEventListener("click", function(){ openSectionModal(b.getAttribute("data-edit-sec")); }); });
+    $all("[data-del-sec]").forEach(function(b){ b.addEventListener("click", function(){ delSection(b.getAttribute("data-del-sec")); }); });
+    var initIn = $("#initBalIn");
+    if (initIn){
+      var paintInit = function(){
+        var v = calcExpr(initIn.value);
+        var res = $("#initRes"), hint = $("#initHint");
+        if (!initIn.value.trim()){ res.textContent = "—"; hint.classList.remove("err"); return; }
+        if (isNaN(v)){ res.textContent = "សមីការមិនត្រឹមត្រូវ"; hint.classList.add("err"); }
+        else { res.textContent = "= " + fmt(v); hint.classList.remove("err"); }
+      };
+      initIn.addEventListener("input", paintInit); paintInit();
+    }
+    var initBtn = $("#initSave");
+    if (initBtn) initBtn.addEventListener("click", function(){
+      var v = calcExpr(initIn.value);
+      if (initIn.value.trim() && (isNaN(v) || v < 0)) return toast("ប្រាក់ដើមគ្រាមិនត្រឹមត្រូវ — សូមពិនិត្យប្រអប់បញ្ចូលឡើងវិញ", true);
+      DB.initialBalance = initIn.value.trim() ? v : 0;
+      saveDB(DB); go("sections");
+      toast("បានរក្សាទុកប្រាក់ដើមគ្រា " + fmt(DB.initialBalance));
+    });
+  }
+  if (view === "reports"){
+    $all("[data-period]").forEach(function(b){ b.addEventListener("click", function(){
+      state.repPeriod = b.getAttribute("data-period");
+      if (state.repPeriod === "day") state.repAnchor = todayStr();
+      else if (state.repPeriod === "month") state.repAnchor = monthStr();
+      else state.repAnchor = String(new Date().getFullYear());
+      go("reports");
+    }); });
+    var ra = $("#repAnchor"); if (ra) ra.addEventListener("change", function(){ state.repAnchor = ra.value; go("reports"); });
+  }
+  if (view === "users"){
+    $all("[data-edit-user]").forEach(function(b){ b.addEventListener("click", function(){ openUserModal(b.getAttribute("data-edit-user")); }); });
+    $all("[data-del-user]").forEach(function(b){ b.addEventListener("click", function(){ delUser(b.getAttribute("data-del-user")); }); });
+  }
+}
+function handleAct(act){
+  if (act === "new-tx") openTxModal(null);
+  else if (act === "add-section") openSectionModal(null);
+  else if (act === "add-user") openUserModal(null);
+  else if (act === "goto-reports") go("reports");
+  else if (act === "goto-expenses") go("expenses");
+  else if (act === "export-csv") exportCSV(DB.transactions.slice().sort(function(a,b){ return a.date.localeCompare(b.date); }), "expensio-transactions.csv");
+  else if (act === "import-csv") $("#csvFile").click();
+  else if (act === "print-tx") openPrint(filteredTxs(), "បញ្ជីប្រតិបត្តិការ ចំណូល / ចំណាយ");
+  else if (act === "export-rep"){ var d = repData(); exportCSV(d.list, "expensio-report-" + state.repPeriod + "-" + state.repAnchor + ".csv"); }
+  else if (act === "print-rep"){ var d2 = repData(); openPrint(d2.list, d2.title); }
+  else if (act === "delete-filtered") delFiltered();
+  else if (act === "toggle-theme"){ toggleTheme(); go(state.view); }
+  else if (act === "save-profile") saveProfile();
+  else if (act === "backup-json"){ download("expensio-backup-" + todayStr() + ".json", JSON.stringify(DB, null, 2), "application/json"); toast("បានទាញយកឯកសារ Backup JSON"); }
+  else if (act === "restore-json") $("#jsonFile").click();
+  else if (act === "reset-data") confirmModal("ស្តារទិន្នន័យដើម?", "ទិន្នន័យបច្ចុប្បន្នទាំងអស់នឹងត្រូវជំនួសដោយទិន្នន័យគំរូដើម។ សូម Backup ទុកជាមុន។", function(){
+    DB = seedDB(); saveDB(DB); currentUser = DB.users.find(function(u){ return u.id === currentUser.id; }) || DB.users[0];
+    session = {userId: currentUser.id}; try { localStorage.setItem(LS_SESSION, JSON.stringify(session)); } catch(e){}
+    enterApp(); toast("បានស្តារទិន្នន័យដើមរួចរាល់");
+  });
+}
+function saveProfile(){
+  var name = $("#setName").value.trim();
+  var pw = $("#setPass").value;
+  if (!name) return toast("សូមបញ្ចូលឈ្មោះពេញ", true);
+  var old = currentUser.name;
+  currentUser.name = name;
+  if (pw) currentUser.password = pw;
+  DB.transactions.forEach(function(t){ if (t.by === old) t.by = name; });
+  saveDB(DB);
+  $("#sideName").textContent = name;
+  $("#avatarFace").textContent = name.split(" ").map(function(w){ return w[0]; }).slice(0,2).join("").toUpperCase();
+  go("settings");
+  toast("បានរក្សាទុកព័ត៌មានគណនី");
+}
+
+/* ---------- modal plumbing ---------- */
+function openModal(html, wide){
+  $("#modalRoot").innerHTML = '<div class="modal-back"><div class="modal' + (wide ? " wide" : "") + '">' + html + "</div></div>";
+  mountIcons($("#modalRoot"));
+  var back = $(".modal-back");
+  back.addEventListener("mousedown", function(e){ if (e.target === back) closeModal(); });
+}
+function closeModal(){ $("#modalRoot").innerHTML = ""; }
+function modalHead(title, desc){
+  return '<div style="display:flex;align-items:flex-start;gap:10px"><div style="flex:1"><h3>' + esc(title) + '</h3><div class="desc">' + esc(desc) + '</div></div>' +
+    '<button class="icon-btn" data-close>' + IC.x + "</button></div>";
+}
+function wireClose(scope){
+  $all("[data-close]", scope || document).forEach(function(b){ b.addEventListener("click", closeModal); });
+}
+function confirmModal(title, text, onYes){
+  openModal(modalHead(title, text) +
+    '<div class="modal-actions"><button class="btn ghost" data-close>បោះបង់</button><button class="btn danger" id="cfYes">' + IC.trash + " យល់ព្រម</button></div>");
+  wireClose();
+  $("#cfYes").addEventListener("click", function(){ closeModal(); onYes(); });
+}
+
+/* ---------- transaction modal (calculator amount box) ---------- */
+function openTxModal(id){
+  var tx = id ? DB.transactions.find(function(t){ return t.id === id; }) : null;
+  if (tx && !canModify(tx)) return toast("អ្នកអាចកែបានតែប្រតិបត្តិការរបស់ខ្លួនប៉ុណ្ណោះ", true);
+  var type = tx ? tx.type : "out";
+  var secOptions = function(tp){
+    return DB.sections.filter(function(s){ return s.type === tp || s.type === "both"; }).map(function(s){
+      return '<option value="' + s.id + '"' + (tx && tx.sectionId === s.id ? " selected" : "") + ">" + esc(s.name) + "</option>";
+    }).join("");
+  };
+  openModal(modalHead(tx ? "កែប្រែប្រតិបត្តិការ" : "ប្រតិបត្តិការថ្មី", "ប្រអប់ទឹកប្រាក់អាចគណនាបាន — ឧ. 100+50*2 ឬ (200+50)/2") +
+    '<div class="f-row"><label>ប្រភេទ</label><div class="seg" style="width:100%">' +
+      '<button type="button" id="txTypeIn" style="flex:1">ចំណូល (Income)</button><button type="button" id="txTypeOut" style="flex:1">ចំណាយ (Expense)</button></div></div>' +
+    '<div class="f-2"><div class="f-row"><label>កាលបរិច្ឆេទ</label><input type="date" id="txDate" value="' + (tx ? tx.date : todayStr()) + '" /></div>' +
+    '<div class="f-row"><label>ផ្នែក</label><select id="txSection"></select></div></div>' +
+    '<div class="f-row"><label>ការពិពណ៌នា</label><input type="text" id="txDesc" placeholder="ឧ. លក់ផលិតផល / ថ្លៃអាហារ…" value="' + (tx ? esc(tx.desc) : "") + '" /></div>' +
+    '<div class="f-row"><label>ទឹកប្រាក់ ($) — វាយលេខ ឬសមីការគណនា</label><div class="amount-wrap"><span class="cur">$</span>' +
+      '<input type="text" id="txAmount" inputmode="decimal" placeholder="0.00 ឬ 100+50*2" value="' + (tx ? tx.amount : "") + '" /></div>' +
+      '<div class="calc-hint" id="calcHint">' + IC.calc + ' <span>លទ្ធផលគណនា៖</span><span class="res" id="calcRes">—</span></div></div>' +
+    '<div class="f-row"><label>កំណត់ចំណាំ</label><input type="text" id="txNote" placeholder="ស្រេចចិត្ត" value="' + (tx ? esc(tx.note || "") : "") + '" /></div>' +
+    '<div class="modal-actions"><button class="btn ghost" data-close>បោះបង់</button><button class="btn primary" id="txSave">' + IC.check + " រក្សាទុក</button></div>");
+  wireClose();
+  var curType = type;
+  var amt = $("#txAmount"), res = $("#calcRes"), hint = $("#calcHint");
+  function paintType(){
+    $("#txTypeIn").className = curType === "in" ? "active" : "";
+    $("#txTypeOut").className = curType === "out" ? "active out" : "";
+    var keep = $("#txSection").value;
+    $("#txSection").innerHTML = secOptions(curType);
+    if (keep && $("#txSection").querySelector('option[value="' + keep + '"]')) $("#txSection").value = keep;
+  }
+  $("#txTypeIn").addEventListener("click", function(){ curType = "in"; paintType(); });
+  $("#txTypeOut").addEventListener("click", function(){ curType = "out"; paintType(); });
+  function paintCalc(){
+    var v = calcExpr(amt.value);
+    if (!amt.value.trim()){ res.textContent = "—"; hint.classList.remove("err"); return; }
+    if (isNaN(v)){ res.textContent = "សមីការមិនត្រឹមត្រូវ"; hint.classList.add("err"); }
+    else { res.textContent = "= " + fmt(v); hint.classList.remove("err"); }
+  }
+  amt.addEventListener("input", paintCalc);
+  paintType(); paintCalc();
+  $("#txSave").addEventListener("click", function(){
+    var desc = $("#txDesc").value.trim();
+    var date = $("#txDate").value;
+    var amount = calcExpr(amt.value);
+    if (!desc) return toast("សូមបញ្ចូលការពិពណ៌នា", true);
+    if (!date) return toast("សូមជ្រើសកាលបរិច្ឆេទ", true);
+    if (isNaN(amount) || amount <= 0) return toast("ទឹកប្រាក់មិនត្រឹមត្រូវ — សូមវាយលេខ ឬសមីការឱ្យបានត្រឹមត្រូវ", true);
+    if (tx){
+      tx.desc = desc; tx.date = date; tx.amount = amount; tx.type = curType;
+      tx.sectionId = $("#txSection").value; tx.note = $("#txNote").value.trim();
+      toast("បានកែប្រែប្រតិបត្តិការ");
+    } else {
+      DB.transactions.push({id: uid(), date: date, desc: desc, type: curType, amount: amount,
+        sectionId: $("#txSection").value, by: currentUser.name, note: $("#txNote").value.trim()});
+      toast("បានបន្ថែមប្រតិបត្តិការ " + fmt(amount));
+    }
+    saveDB(DB); closeModal(); go(state.view);
+  });
+  setTimeout(function(){ $("#txDesc").focus(); }, 60);
+}
+function delTx(id){
+  var tx = DB.transactions.find(function(t){ return t.id === id; });
+  if (!tx) return;
+  if (!canModify(tx)) return toast("អ្នកអាចលុបបានតែប្រតិបត្តិការរបស់ខ្លួនប៉ុណ្ណោះ", true);
+  confirmModal("លុបប្រតិបត្តិការ?", "«" + tx.desc + "» — " + fmt(tx.amount) + " នឹងត្រូវលុបចេញជាអចិន្ត្រៃយ៍។", function(){
+    DB.transactions = DB.transactions.filter(function(t){ return t.id !== id; });
+    saveDB(DB); go(state.view); toast("បានលុបប្រតិបត្តិការ");
+  });
+}
+function delFiltered(){
+  var list = filteredTxs();
+  if (!list.length) return toast("មិនមានកំណត់ត្រាតាមតម្រងបច្ចុប្បន្ន", true);
+  confirmModal("លុបប្រតិបត្តិការតាមតម្រង?", "កំណត់ត្រាចំនួន " + list.length + " នឹងត្រូវលុបចេញទាំងអស់។", function(){
+    var ids = {}; list.forEach(function(t){ ids[t.id] = 1; });
+    DB.transactions = DB.transactions.filter(function(t){ return !ids[t.id]; });
+    saveDB(DB); go("expenses"); toast("បានលុប " + list.length + " កំណត់ត្រា");
+  });
+}
+
+/* ---------- section modal ---------- */
+function openSectionModal(id){
+  if (!isAdmin()) return toast("មានតែ Admin ទេដែលគ្រប់គ្រងផ្នែកបាន", true);
+  var s = id ? sectionById(id) : null;
+  var iconOpts = ["tag","food","plane","briefcase","coins","heart","book","bolt","home2","cart","gift","wallet"].map(function(n){
+    return '<option value="' + n + '"' + (s && s.icon === n ? " selected" : "") + ">" + n + "</option>";
+  }).join("");
+  openModal(modalHead(s ? "កែប្រែផ្នែក" : "បន្ថែមផ្នែកថ្មី", "ផ្នែកជួយចែកប្រតិបត្តិការតាមប្រភេទការងារ និងកំណត់ថវិកាប្រចាំខែ") +
+    '<div class="f-2"><div class="f-row"><label>ឈ្មោះផ្នែក (ខ្មែរ)</label><input id="secName" value="' + (s ? esc(s.name) : "") + '" placeholder="ឧ. ការធ្វើដំណើរ" /></div>' +
+    '<div class="f-row"><label>ឈ្មោះ (English)</label><input id="secEn" value="' + (s ? esc(s.en) : "") + '" placeholder="e.g. Transport" /></div></div>' +
+    '<div class="f-2"><div class="f-row"><label>ប្រភេទ</label><select id="secType">' +
+      '<option value="out"' + (s && s.type === "out" ? " selected" : "") + '>ចំណាយ</option>' +
+      '<option value="in"' + (s && s.type === "in" ? " selected" : "") + '>ចំណូល</option>' +
+      '<option value="both"' + (s && s.type === "both" ? " selected" : "") + '>ទាំងពីរ</option></select></div>' +
+    '<div class="f-row"><label>រូបតំណាង</label><select id="secIcon">' + iconOpts + "</select></div></div>" +
+    '<div class="f-row"><label>ថវិកាប្រចាំខែ ($) — អាចវាយសមីការបាន</label><div class="amount-wrap"><span class="cur">$</span>' +
+      '<input id="secBudget" inputmode="decimal" placeholder="ទុកទទេ = គ្មានកំណត់" value="' + (s && DB.budgets[s.id] ? DB.budgets[s.id] : "") + '" /></div>' +
+      '<div class="calc-hint" id="secCalcHint">' + IC.calc + ' <span>លទ្ធផល៖</span><span class="res" id="secCalcRes">—</span></div></div>' +
+    '<div class="modal-actions"><button class="btn ghost" data-close>បោះបង់</button><button class="btn primary" id="secSave">' + IC.check + " រក្សាទុក</button></div>");
+  wireClose(); mountIcons($("#modalRoot"));
+  var bIn = $("#secBudget");
+  function paintB(){
+    var v = calcExpr(bIn.value);
+    $("#secCalcRes").textContent = !bIn.value.trim() ? "—" : (isNaN(v) ? "មិនត្រឹមត្រូវ" : "= " + fmt(v));
+  }
+  bIn.addEventListener("input", paintB); paintB();
+  $("#secSave").addEventListener("click", function(){
+    var name = $("#secName").value.trim();
+    if (!name) return toast("សូមបញ្ចូលឈ្មោះផ្នែក", true);
+    var bv = bIn.value.trim() ? calcExpr(bIn.value) : null;
+    if (bIn.value.trim() && (isNaN(bv) || bv < 0)) return toast("ថវិកាមិនត្រឹមត្រូវ", true);
+    if (s){
+      s.name = name; s.en = $("#secEn").value.trim() || name; s.type = $("#secType").value; s.icon = $("#secIcon").value;
+      if (bv) DB.budgets[s.id] = bv; else delete DB.budgets[s.id];
+      toast("បានកែប្រែផ្នែក");
+    } else {
+      var ns = {id: uid(), name: name, en: $("#secEn").value.trim() || name, icon: $("#secIcon").value, type: $("#secType").value, builtin: false};
+      DB.sections.push(ns);
+      if (bv) DB.budgets[ns.id] = bv;
+      toast("បានបន្ថែមផ្នែកថ្មី");
+    }
+    saveDB(DB); closeModal(); go(state.view === "home" ? "sections" : state.view);
+  });
+}
+function delSection(id){
+  var s = sectionById(id); if (!s) return;
+  if (s.builtin) return toast("ផ្នែកដើមមិនអាចលុបបានទេ", true);
+  var used = DB.transactions.filter(function(t){ return t.sectionId === id; }).length;
+  confirmModal("លុបផ្នែក?", "ផ្នែក «" + s.name + "» មានប្រតិបត្តិការចំនួន " + used + "។ ប្រតិបត្តិការទាំងនោះនឹងប្តូរទៅផ្នែក «ទំព័រដើម»។", function(){
+    DB.transactions.forEach(function(t){ if (t.sectionId === id) t.sectionId = "sec-home"; });
+    DB.sections = DB.sections.filter(function(x){ return x.id !== id; });
+    delete DB.budgets[id];
+    saveDB(DB); go("sections"); toast("បានលុបផ្នែក");
+  });
+}
+
+/* ---------- user modal ---------- */
+function openUserModal(id){
+  if (!isAdmin()) return;
+  var u = id ? DB.users.find(function(x){ return x.id === id; }) : null;
+  openModal(modalHead(u ? "កែប្រែអ្នកប្រើប្រាស់" : "បន្ថែមអ្នកប្រើប្រាស់", u ? "ទុកពាក្យសម្ងាត់ទទេ បើមិនចង់ប្តូរ" : "អ្នកប្រើថ្មីអាចចូលប្រើតាមផ្ទាំង Login ដែលត្រូវនឹងតួនាទី") +
+    '<div class="f-2"><div class="f-row"><label>ឈ្មោះពេញ</label><input id="uName" value="' + (u ? esc(u.name) : "") + '" /></div>' +
+    '<div class="f-row"><label>Username</label><input id="uUser" value="' + (u ? esc(u.username) : "") + '" /></div></div>' +
+    '<div class="f-row"><label>ពាក្យសម្ងាត់</label><input id="uPass" type="text" placeholder="' + (u ? "•••• (មិនប្តូរ)" : "កំណត់ពាក្យសម្ងាត់") + '" /></div>' +
+    '<div class="f-2"><div class="f-row"><label>តួនាទី</label><select id="uRole">' +
+      '<option value="user"' + (u && u.role === "user" ? " selected" : "") + '>User</option>' +
+      '<option value="admin"' + (u && u.role === "admin" ? " selected" : "") + '>Admin</option></select></div>' +
+    '<div class="f-row"><label>ស្ថានភាព</label><select id="uActive">' +
+      '<option value="1"' + (!u || u.active ? " selected" : "") + '>កំពុងប្រើ</option>' +
+      '<option value="0"' + (u && !u.active ? " selected" : "") + '>ផ្អាក</option></select></div></div>' +
+    '<div class="modal-actions"><button class="btn ghost" data-close>បោះបង់</button><button class="btn primary" id="uSave">' + IC.check + " រក្សាទុក</button></div>");
+  wireClose();
+  $("#uSave").addEventListener("click", function(){
+    var name = $("#uName").value.trim(), un = $("#uUser").value.trim(), pw = $("#uPass").value;
+    if (!name || !un) return toast("សូមបញ្ចូលឈ្មោះ និង Username", true);
+    var clash = DB.users.find(function(x){ return x.username.toLowerCase() === un.toLowerCase() && (!u || x.id !== u.id); });
+    if (clash) return toast("Username នេះមានគេប្រើរួចហើយ", true);
+    if (!u && !pw) return toast("សូមកំណត់ពាក្យសម្ងាត់សម្រាប់អ្នកប្រើថ្មី", true);
+    if (u){
+      u.name = name; u.username = un; if (pw) u.password = pw;
+      u.role = $("#uRole").value; u.active = $("#uActive").value === "1";
+      toast("បានកែប្រែអ្នកប្រើប្រាស់");
+    } else {
+      DB.users.push({id: uid(), name: name, username: un, password: pw, role: $("#uRole").value, active: $("#uActive").value === "1"});
+      toast("បានបន្ថែមអ្នកប្រើប្រាស់ថ្មី");
+    }
+    saveDB(DB); closeModal(); go("users");
+  });
+}
+function delUser(id){
+  var u = DB.users.find(function(x){ return x.id === id; }); if (!u) return;
+  confirmModal("លុបអ្នកប្រើប្រាស់?", "គណនី «" + u.name + "» (" + u.username + ") នឹងត្រូវលុប។ ប្រតិបត្តិការចាស់របស់គាត់នៅដដែល។", function(){
+    DB.users = DB.users.filter(function(x){ return x.id !== id; });
+    saveDB(DB); go("users"); toast("បានលុបអ្នកប្រើប្រាស់");
+  });
+}
+
+/* ---------- CSV export / import ---------- */
+function csvCell(v){ v = String(v == null ? "" : v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }
+function exportCSV(list, filename){
+  if (!list.length) return toast("មិនមានទិន្នន័យសម្រាប់ Export", true);
+  var lines = ["date,description,type,section,amount,by,note"];
+  list.forEach(function(t){
+    var s = sectionById(t.sectionId);
+    lines.push([t.date, t.desc, t.type === "in" ? "income" : "expense", s ? s.en : "", t.amount.toFixed(2), t.by, t.note || ""].map(csvCell).join(","));
+  });
+  download(filename, "﻿" + lines.join("\r\n"), "text/csv");
+  toast("បាន Export " + list.length + " កំណត់ត្រាទៅ CSV");
+}
+function parseCSV(text){
+  var rows = [], row = [], cur = "", inQ = false, i, c;
+  text = text.replace(/^﻿/, "");
+  for (i = 0; i < text.length; i++){
+    c = text[i];
+    if (inQ){
+      if (c === '"'){ if (text[i+1] === '"'){ cur += '"'; i++; } else inQ = false; }
+      else cur += c;
+    } else if (c === '"') inQ = true;
+    else if (c === ","){ row.push(cur); cur = ""; }
+    else if (c === "\n" || c === "\r"){
+      if (c === "\r" && text[i+1] === "\n") i++;
+      row.push(cur); cur = "";
+      if (row.length > 1 || row[0] !== "") rows.push(row);
+      row = [];
+    } else cur += c;
+  }
+  row.push(cur);
+  if (row.length > 1 || row[0] !== "") rows.push(row);
+  return rows;
+}
+function importCSV(file){
+  var reader = new FileReader();
+  reader.onload = function(){
+    try {
+      var rows = parseCSV(String(reader.result));
+      if (!rows.length) return toast("ឯកសារ CSV ទទេ", true);
+      var head = rows[0].map(function(h){ return h.trim().toLowerCase(); });
+      var idx = { date: head.indexOf("date"), desc: head.indexOf("description"), type: head.indexOf("type"),
+        section: head.indexOf("section"), amount: head.indexOf("amount"), by: head.indexOf("by"),
+        note: head.indexOf("note") };
+      if (idx.date < 0 || idx.amount < 0) return toast("ទម្រង់ CSV មិនត្រឹមត្រូវ — ត្រូវមានជួរឈរ date និង amount", true);
+      var added = 0, skipped = 0;
+      rows.slice(1).forEach(function(r){
+        var date = (r[idx.date] || "").trim();
+        var amount = calcExpr(r[idx.amount] || "");
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || isNaN(amount) || amount <= 0){ skipped++; return; }
+        var typeRaw = idx.type >= 0 ? (r[idx.type] || "").trim().toLowerCase() : "expense";
+        var type = (typeRaw === "income" || typeRaw === "in") ? "in" : "out";
+        var secEn = idx.section >= 0 ? (r[idx.section] || "").trim() : "";
+        var sec = DB.sections.find(function(s){ return s.en.toLowerCase() === secEn.toLowerCase() || s.name === secEn; });
+        DB.transactions.push({
+          id: uid(), date: date, desc: (idx.desc >= 0 ? r[idx.desc] : "") || "Imported",
+          type: type, amount: amount, sectionId: sec ? sec.id : "sec-home",
+          by: (idx.by >= 0 && r[idx.by]) ? r[idx.by] : currentUser.name,
+          note: idx.note >= 0 ? (r[idx.note] || "") : ""
+        });
+        added++;
+      });
+      saveDB(DB); go(state.view);
+      toast("Import រួចរាល់៖ បន្ថែម " + added + " កំណត់ត្រា" + (skipped ? " · រំលង " + skipped : ""));
+    } catch(e){ toast("អានឯកសារ CSV មិនបាន", true); }
+  };
+  reader.readAsText(file);
+}
+function restoreJSON(file){
+  var reader = new FileReader();
+  reader.onload = function(){
+    try {
+      var data = JSON.parse(String(reader.result));
+      if (!data || !Array.isArray(data.users) || !Array.isArray(data.transactions)) return toast("ឯកសារ Backup មិនត្រឹមត្រូវ", true);
+      DB = data; if (!DB.settings) DB.settings = {theme:"dark"};
+      if (typeof DB.initialBalance !== "number") DB.initialBalance = 0;
+      saveDB(DB);
+      currentUser = DB.users.find(function(u){ return u.id === (session && session.userId) && u.active; }) || DB.users.find(function(u){ return u.role === "admin"; });
+      session = {userId: currentUser.id};
+      try { localStorage.setItem(LS_SESSION, JSON.stringify(session)); } catch(e){}
+      enterApp(); toast("បាន Restore ទិន្នន័យពី Backup");
+    } catch(e){ toast("អានឯកសារ Backup មិនបាន", true); }
+  };
+  reader.readAsText(file);
+}
+
+/* ---------- print preview ---------- */
+function openPrint(list, title){
+  list = list.slice().sort(function(a, b){ return a.date.localeCompare(b.date); });
+  var inc = txSum(list, "in"), out = txSum(list, "out");
+  var rows = list.map(function(t, i){
+    var s = sectionById(t.sectionId);
+    return "<tr><td>" + (i + 1) + "</td><td>" + fmtDate(t.date) + "</td><td>" + esc(t.desc) + "</td><td>" + (s ? esc(s.name) : "—") + "</td><td>" + esc(t.by) + "</td><td>" + (t.type === "in" ? "ចំណូល" : "ចំណាយ") + '</td><td class="amt ' + (t.type === "in" ? "in" : "out") + '">' + (t.type === "in" ? "+" : "−") + fmt(t.amount) + "</td></tr>";
+  }).join("");
+  var sheet = '<div class="sheet-scroll"><div class="print-sheet"><div class="ps-head"><div><h2>EXPENSIO</h2><div style="color:#55516e;font-size:13px">' + esc(title) + '</div></div>' +
+    '<div style="text-align:right;color:#55516e;font-size:12.5px">ថ្ងៃបោះពុម្ព<br/><span class="num">' + fmtDate(todayStr()) + "</span><br/>អ្នកបោះពុម្ព៖ " + esc(currentUser.name) + "</div></div>" +
+    '<table><thead><tr><th>ល.រ</th><th>កាលបរិច្ឆេទ</th><th>ការពិពណ៌នា</th><th>ផ្នែក</th><th>អ្នកបញ្ចូល</th><th>ប្រភេទ</th><th class="amt">ទឹកប្រាក់ ($)</th></tr></thead><tbody>' +
+    (rows || '<tr><td colspan="7" style="text-align:center;color:#8b86a3">មិនមានទិន្នន័យ</td></tr>') + "</tbody></table>" +
+    '<div class="ps-totals"><span>ចំណូលសរុប: ' + fmt(inc) + '</span><span>ចំណាយសរុប: ' + fmt(out) + '</span><span>សមតុល្យ: ' + fmt(inc - out) + "</span></div>" +
+    '<div class="ps-foot"><span>Expensio — ប្រព័ន្ធគ្រប់គ្រងចំណូល ចំណាយ</span><span>' + list.length + ' កំណត់ត្រា</span></div></div></div>';
+  openModal(modalHead("Print Preview", "ពិនិត្យមើលមុនបោះពុម្ព — ក្នុងផ្ទាំងបោះពុម្ព សូមជ្រើស «Save as PDF» ដើម្បីរក្សាជា PDF") +
+    sheet +
+    '<div class="modal-actions no-print"><button class="btn ghost" data-close>បិទ</button><button class="btn primary" id="doPrint">' + IC.printer + " បោះពុម្ព / Save as PDF</button></div>", true);
+  wireClose();
+  $("#doPrint").addEventListener("click", function(){ window.print(); });
+}
+
+/* ---------- global wiring + init ---------- */
+$all("[data-login-role]").forEach(function(b){
+  b.addEventListener("click", function(){ openLoginForm(b.getAttribute("data-login-role")); });
+});
+$("#loginBack").addEventListener("click", function(){
+  $("#loginForm").classList.add("hidden");
+  $("#loginChoice").classList.remove("hidden");
+});
+$("#loginForm").addEventListener("submit", doLogin);
+$all(".js-theme").forEach(function(b){ b.addEventListener("click", function(e){ e.preventDefault(); toggleTheme(); }); });
+$("#themeBtn").addEventListener("click", toggleTheme);
+$("#logoutBtn").addEventListener("click", doLogout);
+$("#csvFile").addEventListener("change", function(){ if (this.files[0]) importCSV(this.files[0]); this.value = ""; });
+$("#jsonFile").addEventListener("change", function(){ if (this.files[0]) restoreJSON(this.files[0]); this.value = ""; });
+document.addEventListener("keydown", function(e){ if (e.key === "Escape") closeModal(); });
+mountIcons(document);
+if (currentUser) enterApp(); else showLogin();
+</script>
+</body>
+</html>
